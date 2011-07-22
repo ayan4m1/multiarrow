@@ -1,5 +1,15 @@
 name: MultiArrow
-
-main: ayan4m1.MultiArrow
-
+main: com.ayan4m1.multiarrow.MultiArrow
+author: ayan4m1
 version: 0.1
+permissions:
+    multiarrow.use.*:
+        default: op
+        description: Allows use of all arrow types
+        children:
+            multiarrow.use.explosive: true
+    multiarrow.use.explosive:
+        description: Allows use of the explosive arrow
+    multiarrow.free:
+        default: op
+        description: Users with this will not be required to provide extra materials
