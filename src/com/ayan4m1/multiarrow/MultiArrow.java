@@ -39,7 +39,7 @@ public class MultiArrow extends JavaPlugin {
         pm.registerEvent(Event.Type.PLAYER_INTERACT, playerListener, org.bukkit.event.Event.Priority.Low, this);
         pm.registerEvent(Event.Type.ENTITY_DAMAGE, entityListener, org.bukkit.event.Event.Priority.Low, this);
         
-        this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, blockListener, 1L, 30);
+        this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, blockListener, 10, 10);
         
         PluginDescriptionFile pdfFile = this.getDescription();
         log.info(pdfFile.getName() + " v" + pdfFile.getVersion() + " enabled!");
@@ -48,6 +48,8 @@ public class MultiArrow extends JavaPlugin {
     public void onDisable() {
     	PluginDescriptionFile pdfFile = this.getDescription();
         log.info(pdfFile.getName() + " shutting down.");
+        
+        this.getServer().getScheduler().getActiveWorkers().clear();
     }
     
     public boolean isDebugging(final Player player) {
