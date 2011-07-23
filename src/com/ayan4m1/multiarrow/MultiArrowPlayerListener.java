@@ -4,7 +4,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
-import org.bukkit.permissions.Permission;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.inventory.ItemStack;
@@ -73,16 +72,33 @@ public class MultiArrowPlayerListener extends PlayerListener {
 	            }
 			} else if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
 	            if (plugin.activeArrowType.containsKey(player.getName())) {
-	            	int arrowTypeIndex = plugin.activeArrowType.get(player.getName()).ordinal();
+					//Get the currently selected arrow type for our player
+					int arrowTypeIndex = plugin.activeArrowType.get(player.getName()).ordinal();
 
-	            	//If we are at the end of the enum, loop around
-	            	if (arrowTypeIndex == ArrowType.values().length - 1) {
-	            		arrowTypeIndex = 0;
-	            	} else {
-	            		//Advance to the next arrow type
-	            		arrowTypeIndex++;
-	            	}
-	            	
+					//If player can use all arrow types, select next type
+					if (player.hasPermission("multiarrow.use.all")) {
+						if (arrowTypeIndex == ArrowType.values().length - 1) {
+							arrowTypeIndex = 0;
+						} else {
+							arrowTypeIndex++;
+						}
+					} else {
+						//Search for a valid type until looped around
+						int initialIndex = arrowTypeIndex++;
+						while (arrowTypeIndex != initialIndex) {
+							if (player.hasPermission("multiarrow.use." + ArrowType.values()[arrowTypeIndex].toString().toLowerCase())) {
+								break;
+							}
+
+							if (arrowTypeIndex == ArrowType.values().length - 1) {
+								arrowTypeIndex = 0;
+								break;
+							} else {
+								arrowTypeIndex++;
+							}
+						}
+					}
+
 	            	plugin.activeArrowType.put(player.getName(), ArrowType.values()[arrowTypeIndex]);
 	            } else {
 	            	plugin.activeArrowType.put(player.getName(), ArrowType.NORMAL);
@@ -96,4 +112,3 @@ public class MultiArrowPlayerListener extends PlayerListener {
     	}
     }
 }
-

@@ -3,13 +3,25 @@ main: com.ayan4m1.multiarrow.MultiArrow
 author: ayan4m1
 version: 0.1
 permissions:
-    multiarrow.use.*:
+    multiarrow.use.all:
         default: op
         description: Allows use of all arrow types
         children:
             multiarrow.use.explosive: true
+            multiarrow.use.fire: true
+            multiarrow.use.lightning: true
+            multiarrow.use.sharp: true
+            multiarrow.use.drill: true
     multiarrow.use.explosive:
         description: Allows use of the explosive arrow
+    multiarrow.use.fire:
+        description: Allows use of the fire arrow
+    multiarrow.use.lightning:
+        description: Allows use of the lightning arrow
+    multiarrow.use.sharp:
+        description: Allows use of the sharp arrow
+    multiarrow.use.drill:
+        description: Allows use of the drill arrow
     multiarrow.free:
         default: op
         description: Users with this will not be required to provide extra materials
