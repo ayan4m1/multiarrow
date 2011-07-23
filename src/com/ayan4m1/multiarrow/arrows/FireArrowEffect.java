@@ -9,10 +9,12 @@ public class FireArrowEffect implements CustomArrowEffect {
 	@Override
 	public void hitEntity(Arrow arrow, Entity target) {
 		target.setFireTicks(100);
+		arrow.remove();
 	}
 
 	@Override
 	public void hitGround(Arrow arrow) {
 		arrow.getWorld().getBlockAt(arrow.getLocation()).setType(Material.FIRE);
+		arrow.remove();
 	}
 }

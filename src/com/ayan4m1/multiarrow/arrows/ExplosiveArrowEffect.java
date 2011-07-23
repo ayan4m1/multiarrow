@@ -8,10 +8,12 @@ public class ExplosiveArrowEffect implements CustomArrowEffect {
 	@Override
 	public void hitEntity(Arrow arrow, Entity target) {
 		arrow.getWorld().createExplosion(target.getLocation(), 2.0F);
+		arrow.remove();
 	}
 
 	@Override
 	public void hitGround(Arrow arrow) {
-		arrow.getWorld().createExplosion(arrow.getLocation(), 2.0F);
+		arrow.getWorld().createExplosion(arrow.getLocation(), 2.5F);
+		arrow.remove();
 	}
 }
