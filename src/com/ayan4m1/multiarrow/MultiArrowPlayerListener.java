@@ -27,7 +27,7 @@ public class MultiArrowPlayerListener extends PlayerListener {
     	Player player = event.getPlayer();
     	if (player.getItemInHand().getType() == Material.BOW)
     	{
-	    	if (event.getAction() == Action.RIGHT_CLICK_AIR) {
+			if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 	    		PlayerInventory inventory = player.getInventory();
 	    		if (inventory.contains(Material.ARROW)) {
 	                ItemStack arrowStack = player.getInventory().getItem(player.getInventory().first(Material.ARROW));
@@ -71,7 +71,7 @@ public class MultiArrowPlayerListener extends PlayerListener {
 		                }
 	                }
 	            }
-	    	} else if (event.getAction() == Action.LEFT_CLICK_AIR) {
+			} else if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
 	            if (plugin.activeArrowType.containsKey(player.getName())) {
 	            	int arrowTypeIndex = plugin.activeArrowType.get(player.getName()).ordinal();
 
@@ -87,8 +87,11 @@ public class MultiArrowPlayerListener extends PlayerListener {
 	            } else {
 	            	plugin.activeArrowType.put(player.getName(), ArrowType.NORMAL);
 	            }
-	            
-	            player.sendMessage(plugin.activeArrowType.get(player.getName()).toString() + " Arrow Active!");
+
+	            String arrowEffectName = plugin.activeArrowType.get(player.getName()).toString();
+	            arrowEffectName = arrowEffectName.substring(0, 1).toUpperCase() + arrowEffectName.substring(1).toLowerCase();
+
+	            player.sendMessage("Selected " + arrowEffectName  + "!");
 	    	}
     	}
     }
