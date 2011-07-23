@@ -58,14 +58,8 @@ public class MultiArrowPlayerListener extends PlayerListener {
 		                case LIGHTNING:
 		                	arrowEffect = new LightningArrowEffect();
 		                	break;
-		                case HEAVY:
-		                	arrowEffect = new HeavyArrowEffect();
-		                	break;
 		                case SHARP:
 		                	arrowEffect = new SharpArrowEffect();
-		                	break;
-		                case GLAIVE:
-		                	arrowEffect = new GlaiveArrowEffect();
 		                	break;
 		                case DRILL:
 		                	arrowEffect = new DrillArrowEffect();
