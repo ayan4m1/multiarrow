@@ -50,6 +50,7 @@ public class MultiArrow extends JavaPlugin {
         log.info(pdfFile.getName() + " shutting down.");
         
         this.getServer().getScheduler().getActiveWorkers().clear();
+        this.getServer().getScheduler().cancelTasks(this);
     }
     
     public boolean isDebugging(final Player player) {
