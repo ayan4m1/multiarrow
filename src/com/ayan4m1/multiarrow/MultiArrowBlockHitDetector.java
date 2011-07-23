@@ -18,24 +18,19 @@ public class MultiArrowBlockHitDetector implements Runnable {
 	public void run() {
 		if (plugin.activeArrowEffect.size() > 0) {
 			Object[] activeArrows = plugin.activeArrowEffect.keySet().toArray();
-			for(int i = 0; i < activeArrows.length; i++)
-	        {
+			for(int i = 0; i < activeArrows.length; i++) {
 				Arrow arrow = (Arrow)activeArrows[i];
-	            if(locations.containsKey(arrow))
-	            {
+	            if(locations.containsKey(arrow)) {
 	                Location loc = (Location)locations.get(arrow);
 	                Location loca = arrow.getLocation();
-	                if (loc.getBlockX() == loca.getBlockX() && loc.getBlockY() == loca.getBlockY() && loc.getBlockZ() == loca.getBlockZ())
-	                {
-	                    plugin.activeArrowEffect.get(arrow).hitGround(arrow, arrow.getWorld().getBlockAt(arrow.getLocation()));
+	                if (loc.getBlockX() == loca.getBlockX() && loc.getBlockY() == loca.getBlockY() && loc.getBlockZ() == loca.getBlockZ()) {
+	                    plugin.activeArrowEffect.get(arrow).hitGround(arrow);
 	                    plugin.activeArrowEffect.remove(arrow);
 	                    locations.remove(arrow);
-	                } else
-	                {
+	                } else {
 	                    locations.put(arrow, arrow.getLocation());
 	                }
-	            } else
-	            {
+	            } else {
 	                locations.put(arrow, arrow.getLocation());
 	            }
 	        }

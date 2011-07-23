@@ -64,6 +64,12 @@ public class MultiArrowPlayerListener extends PlayerListener {
 		                case SHARP:
 		                	arrowEffect = new SharpArrowEffect();
 		                	break;
+		                case GLAIVE:
+		                	arrowEffect = new GlaiveArrowEffect();
+		                	break;
+		                case DRILL:
+		                	arrowEffect = new DrillArrowEffect();
+		                	break;
 		                }
 		                
 		                if (arrowEffect != null) {

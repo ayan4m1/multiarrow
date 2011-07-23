@@ -28,6 +28,7 @@ public class MultiArrowEntityListener extends EntityListener {
 
                 if (plugin.activeArrowEffect.containsKey(arrow))
                 {
+                	event.setCancelled(true);
                 	plugin.activeArrowEffect.get(arrow).hitEntity(arrow, target);
                 	plugin.activeArrowEffect.remove(arrow);
                 }

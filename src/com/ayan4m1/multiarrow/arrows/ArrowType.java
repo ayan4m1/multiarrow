@@ -6,5 +6,7 @@ public enum ArrowType {
 	FIRE,
 	LIGHTNING,
 	HEAVY,
-	SHARP
+	SHARP,
+	GLAIVE,
+	DRILL
 }
