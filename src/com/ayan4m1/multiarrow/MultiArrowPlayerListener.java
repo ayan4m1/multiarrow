@@ -63,6 +63,12 @@ public class MultiArrowPlayerListener extends PlayerListener {
 		                case DRILL:
 		                	arrowEffect = new DrillArrowEffect();
 		                	break;
+		                case WATER:
+		                	arrowEffect = new WaterArrowEffect();
+		                	break;
+		                case LIGHT:
+		                	arrowEffect = new LightArrowEffect();
+		                	break;
 		                }
 		                
 		                if (arrowEffect != null) {
