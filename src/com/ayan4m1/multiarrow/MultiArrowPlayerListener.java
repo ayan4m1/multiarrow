@@ -22,6 +22,10 @@ public class MultiArrowPlayerListener extends PlayerListener {
         plugin = instance;
     }
 
+    private String toProperCase(String input) {
+        return input.substring(0, 1).toUpperCase() + input.substring(1).toLowerCase();
+    }
+
     public void onPlayerInteract(PlayerInteractEvent event) {
     	Player player = event.getPlayer();
     	if (player.getItemInHand().getType() == Material.BOW)
@@ -46,31 +50,18 @@ public class MultiArrowPlayerListener extends PlayerListener {
                 
 	                if (plugin.activeArrowType.get(player.getName()) != ArrowType.NORMAL) {
 		                CustomArrowEffect arrowEffect = null;
-		                switch(plugin.activeArrowType.get(player.getName()))
-		                {
-		                case EXPLOSIVE:
-		                	arrowEffect = new ExplosiveArrowEffect();
-		                	break;
-		                case FIRE:
-		                	arrowEffect = new FireArrowEffect();
-		                	break;
-		                case LIGHTNING:
-		                	arrowEffect = new LightningArrowEffect();
-		                	break;
-		                case SHARP:
-		                	arrowEffect = new SharpArrowEffect();
-		                	break;
-		                case DRILL:
-		                	arrowEffect = new DrillArrowEffect();
-		                	break;
-		                case WATER:
-		                	arrowEffect = new WaterArrowEffect();
-		                	break;
-		                case LIGHT:
-		                	arrowEffect = new LightArrowEffect();
-		                	break;
-		                }
 		                
+		                String className = this.toProperCase(plugin.activeArrowType.get(player.getName()).toString()) + "ArrowEffect";
+						try {
+							arrowEffect = (CustomArrowEffect) Class.forName("com.ayan4m1.multiarrow.arrows." + className).newInstance();
+						} catch (ClassNotFoundException e) {
+							plugin.log.warning("Failed to find class " + className);
+						} catch (InstantiationException e) {
+							plugin.log.warning("Could not instantiate class " + className);
+						} catch (IllegalAccessException e) {
+							plugin.log.warning("Could not access class " + className);
+						}
+
 		                if (arrowEffect != null) {
 		                	plugin.activeArrowEffect.put(arrow, arrowEffect);
 		                }
@@ -110,10 +101,7 @@ public class MultiArrowPlayerListener extends PlayerListener {
 	            	plugin.activeArrowType.put(player.getName(), ArrowType.NORMAL);
 	            }
 
-	            String arrowEffectName = plugin.activeArrowType.get(player.getName()).toString();
-	            arrowEffectName = arrowEffectName.substring(0, 1).toUpperCase() + arrowEffectName.substring(1).toLowerCase();
-
-	            player.sendMessage("Selected " + arrowEffectName  + "!");
+	            player.sendMessage("Selected " + this.toProperCase(plugin.activeArrowType.get(player.getName()).toString())  + "!");
 	    	}
     	}
     }
