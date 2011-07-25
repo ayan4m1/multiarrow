@@ -17,6 +17,7 @@ public class LightArrowEffect implements CustomArrowEffect {
 		}
 		
 		targetBlock.setType(Material.TORCH);
+		arrow.remove();
 	}
 
 	@Override
@@ -28,6 +29,7 @@ public class LightArrowEffect implements CustomArrowEffect {
 		}
 		
 		targetBlock.setType(Material.TORCH);
+		arrow.remove();
 	}
 
 }
