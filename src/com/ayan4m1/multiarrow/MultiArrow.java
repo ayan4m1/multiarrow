@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 
 import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -21,7 +20,6 @@ public class MultiArrow extends JavaPlugin {
     private final MultiArrowPlayerListener playerListener = new MultiArrowPlayerListener(this);
     private final MultiArrowEntityListener entityListener = new MultiArrowEntityListener(this);
     private final MultiArrowBlockHitDetector blockListener = new MultiArrowBlockHitDetector(this);
-    private final HashMap<Player, Boolean> debugees = new HashMap<Player, Boolean>();
     
     public Logger log;
     public HashMap<String, ArrowType> activeArrowType;
@@ -51,18 +49,6 @@ public class MultiArrow extends JavaPlugin {
         
         this.getServer().getScheduler().getActiveWorkers().clear();
         this.getServer().getScheduler().cancelTasks(this);
-    }
-    
-    public boolean isDebugging(final Player player) {
-        if (debugees.containsKey(player)) {
-            return debugees.get(player);
-        } else {
-            return false;
-        }
-    }
-
-    public void setDebugging(final Player player, final boolean value) {
-        debugees.put(player, value);
     }
 }
 
