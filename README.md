@@ -24,10 +24,11 @@ possible to control which arrow types users have access to.
 The following arrow types are currently implemented:
 
 1. Explosive - Creates a small TNT-like explosion at target
-2. Fire - Burns entities / lights blocks on fire
-3. Lightning - Calls down lightning at target
-4. Sharp - Lethal to entities, destroys blocks it hits
-5. Drill - Digs entities into a hole or excavates downwards
+2. Lightning - Calls down lightning at target
+3. Drill - Digs entities into a hole or excavates downwards
+4. Water - Creates source water at target
+5. Torch - Creates a torch at target or lights an entity on fire
+6. Animal - Spawns a friendly mob at target
 
 ## Custom Arrow Types
 
