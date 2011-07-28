@@ -1,7 +1,7 @@
 name: MultiArrow
 main: com.ayan4m1.multiarrow.MultiArrow
 author: ayan4m1
-version: 0.1
+version: 0.5
 permissions:
     multiarrow.use.all:
         default: op
