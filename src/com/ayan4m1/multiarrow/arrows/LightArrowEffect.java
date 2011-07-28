@@ -9,13 +9,7 @@ import org.bukkit.entity.Entity;
 public class LightArrowEffect implements CustomArrowEffect {
 	@Override
 	public void hitEntity(Arrow arrow, Entity target) {
-		Block targetBlock = target.getLocation().getBlock();
-		
-		if (!targetBlock.isEmpty()) {
-			targetBlock = targetBlock.getRelative(BlockFace.UP);
-		}
-		
-		targetBlock.setType(Material.TORCH);
+		target.setFireTicks(100);
 		arrow.remove();
 	}
 
