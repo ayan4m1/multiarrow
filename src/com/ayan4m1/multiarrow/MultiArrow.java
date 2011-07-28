@@ -20,6 +20,7 @@ public class MultiArrow extends JavaPlugin {
     private final MultiArrowPlayerListener playerListener = new MultiArrowPlayerListener(this);
     private final MultiArrowEntityListener entityListener = new MultiArrowEntityListener(this);
     private final MultiArrowBlockHitDetector blockListener = new MultiArrowBlockHitDetector(this);
+    private int blockHitDetectorThreadId;
     
     public Logger log;
     public HashMap<String, ArrowType> activeArrowType;
@@ -37,7 +38,7 @@ public class MultiArrow extends JavaPlugin {
         pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener, org.bukkit.event.Event.Priority.Low, this);
         pm.registerEvent(Event.Type.ENTITY_DAMAGE, entityListener, org.bukkit.event.Event.Priority.Low, this);
         
-        this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, blockListener, 10, 10);
+        this.blockHitDetectorThreadId = this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, blockListener, 10, 10);
         
         PluginDescriptionFile pdfFile = this.getDescription();
         log.info(pdfFile.getName() + " v" + pdfFile.getVersion() + " enabled!");
@@ -47,7 +48,7 @@ public class MultiArrow extends JavaPlugin {
     	PluginDescriptionFile pdfFile = this.getDescription();
         log.info(pdfFile.getName() + " shutting down.");
         
-        this.getServer().getScheduler().getActiveWorkers().clear();
+        this.getServer().getScheduler().cancelTask(this.blockHitDetectorThreadId);
         this.getServer().getScheduler().cancelTasks(this);
     }
 }
