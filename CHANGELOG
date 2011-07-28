@@ -1,0 +1,22 @@
+v0.5
+----
+ - Added animal arrow, which spawns a random friendly mob
+ - Changed light arrow to torch arrow
+ - Torch arrow lights entities on fire
+ - Fixed bug where light/torch arrow would not create a torch on top of snow
+ - Explicitly unload async thread
+ - Removed fire and sharp arrow types
+
+v0.3
+----
+ - Optimized memory usage
+ - Clean up water/light arrows after their effect
+ - Switched to dynamic class instantiation of CustomArrowEffect for increased modularity
+
+v0.2
+----
+ - Cleaned up BlockHitDetector, added reflection for custom arrows, added water/light arrow types
+
+v0.1
+----
+ - Initial release
