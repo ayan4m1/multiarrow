@@ -3,6 +3,7 @@ package com.ayan4m1.multiarrow;
 import java.util.HashMap;
 
 import org.bukkit.entity.Arrow;
+import org.bukkit.util.Vector;
 import org.bukkit.Location;
 
 public class MultiArrowBlockHitDetector implements Runnable {
@@ -34,10 +35,12 @@ public class MultiArrowBlockHitDetector implements Runnable {
 					Location loc = (Location) locations.get(arrow);
 					Location loca = arrow.getLocation();
 					if (loc.getBlockX() == loca.getBlockX() && loc.getBlockY() == loca.getBlockY() && loc.getBlockZ() == loca.getBlockZ()) {
-						plugin.activeArrowEffect.get(arrow).hitGround(arrow);
-						plugin.activeArrowEffect.remove(arrow);
-						locations.remove(arrow);
-						counts.remove(arrow);
+						if (isBlockAdjacent(loc)) {
+							plugin.activeArrowEffect.get(arrow).hitGround(arrow);
+							plugin.activeArrowEffect.remove(arrow);
+							locations.remove(arrow);
+							counts.remove(arrow);
+						}
 					} else {
 						locations.put(arrow, arrow.getLocation());
 						counts.put(arrow, counts.get(arrow) + 1);
@@ -48,5 +51,20 @@ public class MultiArrowBlockHitDetector implements Runnable {
 				}
 			}
 		}
+	}
+
+	private boolean isBlockAdjacent(Location loc) {
+		for(int x = -1; x <= 1; x++) {
+			for(int y = -1; y <= 1; y++) {
+				for(int z = -1; z <= 1; z++) {
+					Vector offset = loc.toVector().add(new Vector(x, y, z));
+					Location searchLoc = new Location(loc.getWorld(), offset.getX(), offset.getY(), offset.getZ());
+					if (!searchLoc.getBlock().isEmpty()) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 }
