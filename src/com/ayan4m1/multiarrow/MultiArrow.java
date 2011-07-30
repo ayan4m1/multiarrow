@@ -21,35 +21,38 @@ public class MultiArrow extends JavaPlugin {
     private final MultiArrowEntityListener entityListener = new MultiArrowEntityListener(this);
     private final MultiArrowBlockHitDetector blockListener = new MultiArrowBlockHitDetector(this);
     private int blockHitDetectorThreadId;
-    
+
     public Logger log;
     public HashMap<String, ArrowType> activeArrowType;
     public HashMap<Arrow, CustomArrowEffect> activeArrowEffect;
+    public ConfigHandler config;
 
-    public MultiArrow() {
-        this.log = Logger.getLogger("minecraft");
-        this.activeArrowType = new HashMap<String, ArrowType>();
-        this.activeArrowEffect = new HashMap<Arrow, CustomArrowEffect>();
-    }
+	public MultiArrow() {
+		this.log = Logger.getLogger("minecraft");
+		this.activeArrowType = new HashMap<String, ArrowType>();
+		this.activeArrowEffect = new HashMap<Arrow, CustomArrowEffect>();
+	}
 
-    public void onEnable() {
-        PluginManager pm = getServer().getPluginManager();
-        pm.registerEvent(Event.Type.PLAYER_INTERACT, playerListener, org.bukkit.event.Event.Priority.Low, this);
-        pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener, org.bukkit.event.Event.Priority.Low, this);
-        pm.registerEvent(Event.Type.ENTITY_DAMAGE, entityListener, org.bukkit.event.Event.Priority.Low, this);
-        
-        this.blockHitDetectorThreadId = this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, blockListener, 10, 10);
-        
-        PluginDescriptionFile pdfFile = this.getDescription();
-        log.info(pdfFile.getName() + " v" + pdfFile.getVersion() + " enabled!");
-    }
-    
-    public void onDisable() {
-    	PluginDescriptionFile pdfFile = this.getDescription();
-        log.info(pdfFile.getName() + " shutting down.");
-        
-        this.getServer().getScheduler().cancelTask(this.blockHitDetectorThreadId);
-        this.getServer().getScheduler().cancelTasks(this);
-    }
+	public void onEnable() {
+		this.config = new ConfigHandler(this);
+
+		PluginManager pm = getServer().getPluginManager();
+		pm.registerEvent(Event.Type.PLAYER_INTERACT, playerListener, org.bukkit.event.Event.Priority.Low, this);
+		pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener, org.bukkit.event.Event.Priority.Low, this);
+		pm.registerEvent(Event.Type.ENTITY_DAMAGE, entityListener, org.bukkit.event.Event.Priority.Low, this);
+
+		this.blockHitDetectorThreadId = this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, blockListener, 20L, 10L);
+
+		PluginDescriptionFile pdfFile = this.getDescription();
+		log.info(pdfFile.getName() + " v" + pdfFile.getVersion() + " enabled!");
+	}
+
+	public void onDisable() {
+		PluginDescriptionFile pdfFile = this.getDescription();
+		log.info(pdfFile.getName() + " shutting down.");
+
+		this.getServer().getScheduler().cancelTask(this.blockHitDetectorThreadId);
+		this.getServer().getScheduler().cancelTasks(this);
+	}
 }
 
