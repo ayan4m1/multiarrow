@@ -32,5 +32,4 @@ public class WaterArrowEffect implements CustomArrowEffect {
 			}
 		}
 	}
-
 }

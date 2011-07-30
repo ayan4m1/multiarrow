@@ -37,5 +37,4 @@ public class DrillArrowEffect implements CustomArrowEffect {
 			}
 		}
 	}
-
 }

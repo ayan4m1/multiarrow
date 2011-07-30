@@ -16,5 +16,4 @@ public class LightningArrowEffect implements CustomArrowEffect {
 		arrow.getWorld().strikeLightning(arrow.getLocation());
 		arrow.remove();
 	}
-
 }
