@@ -19,6 +19,11 @@ click to fire the selected arrow type.
 Using the new permissions system built into CraftBukkit, it is
 possible to control which arrow types users have access to.
 
+1. multiarrow.use.all allows users to use all arrow types
+2. multiarrow.use.<name> allows users to use a specific arrow type
+3. multiarrow.free bypasses the check for required items
+
+
 ## Arrow Types
 
 The following arrow types are currently implemented:
