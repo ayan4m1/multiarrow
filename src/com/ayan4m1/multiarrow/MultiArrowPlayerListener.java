@@ -40,27 +40,46 @@ public class MultiArrowPlayerListener extends PlayerListener {
 			if (event.getAction() == Action.RIGHT_CLICK_AIR	|| event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 				PlayerInventory inventory = player.getInventory();
 				if (inventory.contains(Material.ARROW)) {
-					ItemStack arrowStack = player.getInventory().getItem(
-							player.getInventory().first(Material.ARROW));
+					if (!plugin.activeArrowType.containsKey(player.getName())) {
+						plugin.activeArrowType.put(player.getName(), ArrowType.NORMAL);
+					}
+
+					ArrowType arrowType = plugin.activeArrowType.get(player.getName());
+
+					if (!player.hasPermission("multiarrow.free") && plugin.config.getRequiredTypeId(arrowType) > 0) {
+						try {
+							if (inventory.contains(Material.getMaterial(plugin.config.getRequiredTypeId(arrowType)))) {
+								ItemStack reqdStack = player.getInventory().getItem(player.getInventory().first(Material.getMaterial(plugin.config.getRequiredTypeId(arrowType))));
+								if (reqdStack.getAmount() > 1) {
+									reqdStack.setAmount(reqdStack.getAmount() - 1);
+								} else {
+									inventory.clear(inventory.first(Material.getMaterial(plugin.config.getRequiredTypeId(arrowType))));
+								}
+								//HACK: This method is deprecated, but its use here fixes an issue
+								player.updateInventory();
+							} else {
+								player.sendMessage("You do not have any " + this.toProperCase(Material.getMaterial(plugin.config.getRequiredTypeId(arrowType)).toString().replace('_', ' ')));
+								event.setCancelled(true);
+								return;
+							}
+						} catch (Exception e) {
+							plugin.log.warning("MultiArrow could not check for item with id " + ((Integer)plugin.config.getRequiredTypeId(arrowType)).toString());
+						}
+					}
+
+					ItemStack arrowStack = player.getInventory().getItem(player.getInventory().first(Material.ARROW));
 					if (arrowStack.getAmount() > 1) {
 						arrowStack.setAmount(arrowStack.getAmount() - 1);
 					} else {
 						inventory.clear(inventory.first(Material.ARROW));
 					}
 
-					if (!plugin.activeArrowType.containsKey(player.getName())) {
-						plugin.activeArrowType.put(player.getName(),
-								ArrowType.NORMAL);
-					}
-
-					event.setCancelled(true);
-
 					Arrow arrow = player.shootArrow();
 
-					if (plugin.activeArrowType.get(player.getName()) != ArrowType.NORMAL) {
+					if (arrowType != ArrowType.NORMAL) {
 						CustomArrowEffect arrowEffect = null;
 
-						String className = this.toProperCase(plugin.activeArrowType.get(player.getName()).toString()) + "ArrowEffect";
+						String className = this.toProperCase(arrowType.toString()) + "ArrowEffect";
 						try {
 							arrowEffect = (CustomArrowEffect) Class.forName("com.ayan4m1.multiarrow.arrows." + className).newInstance();
 						} catch (ClassNotFoundException e) {
@@ -72,6 +91,7 @@ public class MultiArrowPlayerListener extends PlayerListener {
 						}
 
 						if (arrowEffect != null) {
+							event.setCancelled(true);
 							plugin.activeArrowEffect.put(arrow, arrowEffect);
 						}
 					}
