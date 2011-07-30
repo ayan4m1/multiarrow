@@ -7,5 +7,6 @@ public enum ArrowType {
 	DRILL,
 	WATER,
 	TORCH,
-	ANIMAL
+	ANIMAL,
+	TELEPORT
 }
