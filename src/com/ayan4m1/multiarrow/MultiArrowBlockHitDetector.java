@@ -24,7 +24,7 @@ public class MultiArrowBlockHitDetector implements Runnable {
 			for (int i = 0; i < activeArrows.length; i++) {
 				Arrow arrow = (Arrow) activeArrows[i];
 				if (locations.containsKey(arrow) && counts.containsKey(arrow)) {
-					if (counts.get(arrow) > 100) {
+					if (counts.get(arrow) > 100 || arrow.isDead()) {
 						arrow.remove();
 						plugin.activeArrowEffect.remove(arrow);
 						locations.remove(arrow);
