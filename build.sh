@@ -1,5 +1,5 @@
 #!/bin/bash
-CLASSPATH=./lib/craftbukkit-0.0.1-SNAPSHOT.jar
+CLASSPATH=./lib/craftbukkit-0.0.1-SNAPSHOT.jar:./lib/snakeyaml-1.8.jar
 
 rm -rf bin
 mkdir bin
