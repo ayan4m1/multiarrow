@@ -12,13 +12,11 @@ public class AnimalArrowEffect implements CustomArrowEffect {
 	@Override
 	public void hitEntity(Arrow arrow, Entity target) {
 		arrow.getWorld().spawnCreature(arrow.getLocation(), getRandomAnimal());
-		arrow.remove();
 	}
 
 	@Override
 	public void hitGround(Arrow arrow) {
 		arrow.getWorld().spawnCreature(arrow.getLocation(), getRandomAnimal());
-		arrow.remove();
 	}
 	
 	private CreatureType getRandomAnimal() {

@@ -12,13 +12,11 @@ public class DrillArrowEffect implements CustomArrowEffect {
 	@Override
 	public void hitEntity(Arrow arrow, Entity target) {
 		this.drillDown(target.getWorld().getBlockAt(target.getLocation()));
-		arrow.remove();
 	}
 
 	@Override
 	public void hitGround(Arrow arrow) {
 		this.drillDown(arrow.getWorld().getBlockAt(arrow.getLocation()));
-		arrow.remove();
 	}
 	
 	private void drillDown(Block startBlock) {

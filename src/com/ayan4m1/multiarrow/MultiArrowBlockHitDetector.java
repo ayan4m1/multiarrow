@@ -3,6 +3,7 @@ package com.ayan4m1.multiarrow;
 import java.util.HashMap;
 
 import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.bukkit.Location;
 
@@ -37,6 +38,10 @@ public class MultiArrowBlockHitDetector implements Runnable {
 					if (loc.getBlockX() == loca.getBlockX() && loc.getBlockY() == loca.getBlockY() && loc.getBlockZ() == loca.getBlockZ()) {
 						if (isBlockAdjacent(loc)) {
 							plugin.activeArrowEffect.get(arrow).hitGround(arrow);
+							if (plugin.config.getRemoveArrow(plugin.activeArrowType.get(((Player)arrow.getShooter()).getName()))) {
+								arrow.remove();
+								continue;
+							}
 							plugin.activeArrowEffect.remove(arrow);
 							locations.remove(arrow);
 							counts.remove(arrow);

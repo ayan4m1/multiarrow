@@ -16,7 +16,6 @@ public class TeleportArrowEffect implements CustomArrowEffect {
 			newLoc.add(0, 1, 0);
 		}
 		target.teleport(newLoc);
-		arrow.remove();
 	}
 
 	@Override
@@ -27,6 +26,5 @@ public class TeleportArrowEffect implements CustomArrowEffect {
 			newLoc.add(0, 1, 0);
 		}
 		arrow.getShooter().teleport(newLoc);
-		arrow.remove();
 	}
 }

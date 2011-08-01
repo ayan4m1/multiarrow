@@ -10,7 +10,6 @@ public class TorchArrowEffect implements CustomArrowEffect {
 	@Override
 	public void hitEntity(Arrow arrow, Entity target) {
 		target.setFireTicks(100);
-		arrow.remove();
 	}
 
 	@Override
@@ -26,6 +25,5 @@ public class TorchArrowEffect implements CustomArrowEffect {
 		}
 
 		targetBlock.setType(Material.TORCH);
-		arrow.remove();
 	}
 }

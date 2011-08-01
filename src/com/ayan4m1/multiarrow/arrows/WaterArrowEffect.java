@@ -12,13 +12,11 @@ public class WaterArrowEffect implements CustomArrowEffect {
 	@Override
 	public void hitEntity(Arrow arrow, Entity target) {
 		this.setToWater(arrow, 2);
-		arrow.remove();
 	}
 
 	@Override
 	public void hitGround(Arrow arrow) {
 		this.setToWater(arrow, 1);
-		arrow.remove();
 	}
 	
 	private void setToWater(Arrow arrow, int radius) {
