@@ -2,6 +2,7 @@ package com.ayan4m1.multiarrow;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 
@@ -13,6 +14,7 @@ import com.ayan4m1.multiarrow.arrows.ArrowType;
 public class ConfigHandler {
 	private MultiArrow plugin;
 	private LinkedHashMap<String, LinkedHashMap<String, Integer>> data;
+	private final String defaultConfigFile = "requirements:\nremove-arrow:";
 
 	public int getRequiredTypeId(ArrowType type) {
 		LinkedHashMap<String, Integer> requirements = data.get("requirements");
@@ -41,6 +43,12 @@ public class ConfigHandler {
 				if (!configFile.exists()) {
 					this.plugin.log.info("MultiArrow created new config.yml");
 					configFile.createNewFile();
+					if (configFile.canWrite()) {
+						FileOutputStream fo = new FileOutputStream(configFile);
+						fo.write(defaultConfigFile.getBytes());
+						fo.flush();
+						fo.close();
+					}
 				}
 				FileInputStream fs = new FileInputStream(configFile);
 				this.data = (LinkedHashMap<String, LinkedHashMap<String, Integer>>)yaml.load(fs);
