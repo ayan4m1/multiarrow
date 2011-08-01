@@ -8,4 +8,7 @@ permissions:
         description: Allows use of all arrow types
     multiarrow.free:
         default: op
-        description: Users with this will not be required to provide extra materials
+        description: Bypass checks for extra materials
+    multiarrow.infinite:
+        default: false
+        description: Will not not consume arrows when firing

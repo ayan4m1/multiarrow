@@ -38,61 +38,67 @@ public class MultiArrowPlayerListener extends PlayerListener {
 		if (player.getItemInHand().getType() == Material.BOW) {
 			if (event.getAction() == Action.RIGHT_CLICK_AIR	|| event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 				PlayerInventory inventory = player.getInventory();
-				if (inventory.contains(Material.ARROW)) {
-					if (!plugin.activeArrowType.containsKey(player.getName())) {
-						plugin.activeArrowType.put(player.getName(), ArrowType.NORMAL);
-					}
+				if (!plugin.activeArrowType.containsKey(player.getName())) {
+					plugin.activeArrowType.put(player.getName(), ArrowType.NORMAL);
+				}
 
-					event.setCancelled(true);
+				event.setCancelled(true);
 
-					ArrowType arrowType = plugin.activeArrowType.get(player.getName());
+				ArrowType arrowType = plugin.activeArrowType.get(player.getName());
 
-					if (!player.hasPermission("multiarrow.free") && plugin.config.getRequiredTypeId(arrowType) > 0) {
-						try {
-							if (inventory.contains(Material.getMaterial(plugin.config.getRequiredTypeId(arrowType)))) {
-								ItemStack reqdStack = player.getInventory().getItem(player.getInventory().first(Material.getMaterial(plugin.config.getRequiredTypeId(arrowType))));
-								if (reqdStack.getAmount() > 1) {
-									reqdStack.setAmount(reqdStack.getAmount() - 1);
-								} else {
-									inventory.clear(inventory.first(Material.getMaterial(plugin.config.getRequiredTypeId(arrowType))));
-								}
-								//HACK: This method is deprecated, but its use here fixes an issue
-								player.updateInventory();
+				if (!player.hasPermission("multiarrow.free") && plugin.config.getRequiredTypeId(arrowType) > 0) {
+					try {
+						if (inventory.contains(Material.getMaterial(plugin.config.getRequiredTypeId(arrowType)))) {
+							ItemStack reqdStack = player.getInventory().getItem(player.getInventory().first(Material.getMaterial(plugin.config.getRequiredTypeId(arrowType))));
+							if (reqdStack.getAmount() > 1) {
+								reqdStack.setAmount(reqdStack.getAmount() - 1);
 							} else {
-								player.sendMessage("You do not have any " + this.toProperCase(Material.getMaterial(plugin.config.getRequiredTypeId(arrowType)).toString().replace('_', ' ')));
-								return;
+								inventory.clear(inventory.first(Material.getMaterial(plugin.config.getRequiredTypeId(arrowType))));
 							}
-						} catch (Exception e) {
-							plugin.log.warning("MultiArrow could not check for item with id " + ((Integer)plugin.config.getRequiredTypeId(arrowType)).toString());
+						} else {
+							player.sendMessage("You do not have any " + this.toProperCase(Material.getMaterial(plugin.config.getRequiredTypeId(arrowType)).toString().replace('_', ' ')));
+							return;
 						}
+					} catch (Exception e) {
+						plugin.log.warning("MultiArrow could not check for item with id " + ((Integer)plugin.config.getRequiredTypeId(arrowType)).toString());
 					}
+				}
 
-					ItemStack arrowStack = player.getInventory().getItem(player.getInventory().first(Material.ARROW));
-					if (arrowStack.getAmount() > 1) {
-						arrowStack.setAmount(arrowStack.getAmount() - 1);
+				if (!player.hasPermission("multiarrow.infinite")) {
+					if (player.getInventory().contains(Material.ARROW)) {
+						ItemStack arrowStack = player.getInventory().getItem(player.getInventory().first(Material.ARROW));
+						if (arrowStack.getAmount() > 1) {
+							arrowStack.setAmount(arrowStack.getAmount() - 1);
+						} else {
+							player.getInventory().remove(arrowStack);
+						}
 					} else {
-						inventory.clear(inventory.first(Material.ARROW));
+						player.sendMessage("Out of arrows!");
+						return;
+					}
+				}
+
+				//HACK: Without this the arrow count does not update correctly
+				player.updateInventory();
+
+				Arrow arrow = player.shootArrow();
+
+				if (arrowType != ArrowType.NORMAL) {
+					CustomArrowEffect arrowEffect = null;
+
+					String className = this.toProperCase(arrowType.toString()) + "ArrowEffect";
+					try {
+						arrowEffect = (CustomArrowEffect) Class.forName("com.ayan4m1.multiarrow.arrows." + className).newInstance();
+					} catch (ClassNotFoundException e) {
+						plugin.log.warning("Failed to find class " + className);
+					} catch (InstantiationException e) {
+						plugin.log.warning("Could not instantiate class " + className);
+					} catch (IllegalAccessException e) {
+						plugin.log.warning("Could not access class " + className);
 					}
 
-					Arrow arrow = player.shootArrow();
-
-					if (arrowType != ArrowType.NORMAL) {
-						CustomArrowEffect arrowEffect = null;
-
-						String className = this.toProperCase(arrowType.toString()) + "ArrowEffect";
-						try {
-							arrowEffect = (CustomArrowEffect) Class.forName("com.ayan4m1.multiarrow.arrows." + className).newInstance();
-						} catch (ClassNotFoundException e) {
-							plugin.log.warning("Failed to find class " + className);
-						} catch (InstantiationException e) {
-							plugin.log.warning("Could not instantiate class " + className);
-						} catch (IllegalAccessException e) {
-							plugin.log.warning("Could not access class " + className);
-						}
-
-						if (arrowEffect != null) {
-							plugin.activeArrowEffect.put(arrow, arrowEffect);
-						}
+					if (arrowEffect != null) {
+						plugin.activeArrowEffect.put(arrow, arrowEffect);
 					}
 				}
 			} else if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
