@@ -19,7 +19,7 @@ public class ConfigHandler {
 		if (data.containsKey("requirements")) {
 			LinkedHashMap<String, Integer> requirements = data.get("requirements");
 			String typeName = type.toString().toLowerCase();
-			if (requirements.containsKey(typeName)) {
+			if (requirements != null && requirements.containsKey(typeName)) {
 				try {
 					return requirements.get(typeName);
 				} catch (Exception e) {
