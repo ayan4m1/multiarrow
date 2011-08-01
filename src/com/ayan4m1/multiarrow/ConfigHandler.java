@@ -10,10 +10,9 @@ import org.yaml.snakeyaml.*;
 
 import com.ayan4m1.multiarrow.arrows.ArrowType;
 
-
 public class ConfigHandler {
 	private MultiArrow plugin;
-	private LinkedHashMap<String, LinkedHashMap<String, Integer>> data;
+	private LinkedHashMap<String, LinkedHashMap> data;
 	private final String defaultConfigFile = "requirements:\nremove-arrow:";
 
 	public int getRequiredTypeId(ArrowType type) {
@@ -22,6 +21,14 @@ public class ConfigHandler {
 		if (requirements.containsKey(typeName)) {
 			return requirements.get(typeName);
 		} else return 0;
+	}
+
+	public boolean getRemoveArrow(ArrowType type) {
+		LinkedHashMap<String, Boolean> removals = data.get("remove-arrow");
+		String typeName = type.toString().toLowerCase();
+		if (removals != null && removals.containsKey(typeName)) {
+			return removals.get(typeName);
+		} else return true;
 	}
 
 	private boolean createDataDirectory() {
@@ -51,7 +58,7 @@ public class ConfigHandler {
 					}
 				}
 				FileInputStream fs = new FileInputStream(configFile);
-				this.data = (LinkedHashMap<String, LinkedHashMap<String, Integer>>)yaml.load(fs);
+				this.data = (LinkedHashMap<String, LinkedHashMap>)yaml.load(fs);
 				if (this.data != null) {
 					this.plugin.log.info("MultiArrow loaded configuration from config.yml");
 				} else {
