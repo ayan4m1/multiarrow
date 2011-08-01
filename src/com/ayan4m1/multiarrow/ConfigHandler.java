@@ -16,18 +16,32 @@ public class ConfigHandler {
 	private final String defaultConfigFile = "requirements:\nremove-arrow:";
 
 	public int getRequiredTypeId(ArrowType type) {
-		LinkedHashMap<String, Integer> requirements = data.get("requirements");
-		String typeName = type.toString().toLowerCase();
-		if (requirements.containsKey(typeName)) {
-			return requirements.get(typeName);
+		if (data.containsKey("requirements")) {
+			LinkedHashMap<String, Integer> requirements = data.get("requirements");
+			String typeName = type.toString().toLowerCase();
+			if (requirements.containsKey(typeName)) {
+				try {
+					return requirements.get(typeName);
+				} catch (Exception e) {
+					plugin.log.warning("Invalid value set in config.yml requirements!");
+					return 0;
+				}
+			} else return 0;
 		} else return 0;
 	}
 
 	public boolean getRemoveArrow(ArrowType type) {
-		LinkedHashMap<String, Boolean> removals = data.get("remove-arrow");
-		String typeName = type.toString().toLowerCase();
-		if (removals != null && removals.containsKey(typeName)) {
-			return removals.get(typeName);
+		if (data.containsKey("remove-arrow")) {
+			LinkedHashMap<String, Boolean> removals = data.get("remove-arrow");
+			String typeName = type.toString().toLowerCase();
+			if (removals != null && removals.containsKey(typeName)) {
+				try {
+					return removals.get(typeName);
+				} catch (Exception e) {
+					plugin.log.warning("Invalid value set in config.yml remove-arrow!");
+					return true;
+				}
+			} else return true;
 		} else return true;
 	}
 
@@ -59,9 +73,7 @@ public class ConfigHandler {
 				}
 				FileInputStream fs = new FileInputStream(configFile);
 				this.data = (LinkedHashMap<String, LinkedHashMap>)yaml.load(fs);
-				if (this.data != null) {
-					this.plugin.log.info("MultiArrow loaded configuration from config.yml");
-				} else {
+				if (this.data == null) {
 					this.plugin.log.warning("MultiArrow could not load config.yml");
 				}
 			} catch (IOException e) {
