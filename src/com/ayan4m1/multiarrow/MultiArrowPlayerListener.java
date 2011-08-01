@@ -43,6 +43,8 @@ public class MultiArrowPlayerListener extends PlayerListener {
 						plugin.activeArrowType.put(player.getName(), ArrowType.NORMAL);
 					}
 
+					event.setCancelled(true);
+
 					ArrowType arrowType = plugin.activeArrowType.get(player.getName());
 
 					if (!player.hasPermission("multiarrow.free") && plugin.config.getRequiredTypeId(arrowType) > 0) {
@@ -58,7 +60,6 @@ public class MultiArrowPlayerListener extends PlayerListener {
 								player.updateInventory();
 							} else {
 								player.sendMessage("You do not have any " + this.toProperCase(Material.getMaterial(plugin.config.getRequiredTypeId(arrowType)).toString().replace('_', ' ')));
-								event.setCancelled(true);
 								return;
 							}
 						} catch (Exception e) {
@@ -90,7 +91,6 @@ public class MultiArrowPlayerListener extends PlayerListener {
 						}
 
 						if (arrowEffect != null) {
-							event.setCancelled(true);
 							plugin.activeArrowEffect.put(arrow, arrowEffect);
 						}
 					}
