@@ -53,15 +53,15 @@ public class ConfigHandler {
 				FileInputStream fs = new FileInputStream(configFile);
 				this.data = (LinkedHashMap<String, LinkedHashMap<String, Integer>>)yaml.load(fs);
 				if (this.data != null) {
-					this.plugin.log.info("Loaded "  + this.data.get("requirements").size() + " requirement nodes");
+					this.plugin.log.info("MultiArrow loaded configuration from config.yml");
 				} else {
-					this.plugin.log.warning("Could not load config.yml");
+					this.plugin.log.warning("MultiArrow could not load config.yml");
 				}
 			} catch (IOException e) {
 				this.plugin.log.warning("IOException reading MultiArrow/config.yml + (" + e.getMessage() + ")");
 			}
 		} else {
-			this.plugin.log.warning("Could not create plugin directory for MultiArrow!");
+			this.plugin.log.warning("MultiArrow could not create a plugin directory!");
 			this.plugin.log.info("MultiArrow continuing with no config...");
 		}
 	}
