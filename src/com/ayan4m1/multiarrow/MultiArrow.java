@@ -32,7 +32,7 @@ public class MultiArrow extends JavaPlugin {
     public HashMap<String, ArrowType> activeArrowType;
     public HashMap<Arrow, CustomArrowEffect> activeArrowEffect;
     public ConfigHandler config;
-    public iConomy iConomy;
+    public iConomy iconomy;
 
 	public MultiArrow() {
 		this.log = Logger.getLogger("minecraft");
@@ -42,7 +42,7 @@ public class MultiArrow extends JavaPlugin {
 
 	public boolean chargeFee(Player player, ArrowType type) {
 		Double arrowFee = config.getArrowFee(type);
-		if (this.iConomy != null && player.hasPermission("multiarrow.free-fees") && arrowFee > 0D) {
+		if (this.iconomy != null && player.hasPermission("multiarrow.free-fees") && arrowFee > 0D) {
 			try {
 				if (iConomy.hasAccount(player.getName())) {
 					Holdings balance = iConomy.getAccount(player.getName()).getHoldings();

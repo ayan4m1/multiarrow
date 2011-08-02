@@ -16,9 +16,9 @@ public class MultiArrowServerListener extends ServerListener {
 
 	@Override
 	public void onPluginDisable(PluginDisableEvent event) {
-		if (plugin.iConomy != null) {
+		if (plugin.iconomy != null) {
 			if (event.getPlugin().getDescription().getName().equals("iConomy")) {
-				plugin.iConomy = null;
+				plugin.iconomy = null;
 				plugin.log.info("MultiArrow unhooked from iConomy.");
 			}
 		}
@@ -26,12 +26,12 @@ public class MultiArrowServerListener extends ServerListener {
 
 	@Override
 	public void onPluginEnable(PluginEnableEvent event) {
-		if (plugin.iConomy == null) {
+		if (plugin.iconomy == null) {
 			Plugin iConomy = plugin.getServer().getPluginManager().getPlugin("iConomy");
 
 			if (iConomy != null) {
 				if (iConomy.isEnabled()	&& iConomy.getClass().getName().equals("com.iConomy.iConomy")) {
-					plugin.iConomy = (iConomy)iConomy;
+					plugin.iconomy = (iConomy)iConomy;
 					plugin.log.info("MultiArrow hooked into iConomy.");
 				}
 			}

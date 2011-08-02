@@ -144,7 +144,7 @@ public class MultiArrowPlayerListener extends PlayerListener {
 				ArrowType arrowType = plugin.activeArrowType.get(player.getName());
 				Double arrowFee = plugin.config.getArrowFee(arrowType);
 				String message = "Selected " + this.toProperCase(arrowType.toString());
-				if (plugin.iConomy != null && arrowFee > 0D) {
+				if (plugin.iconomy != null && arrowFee > 0D) {
 					message += " (" + iConomy.format(arrowFee) + ")";
 				}
 
