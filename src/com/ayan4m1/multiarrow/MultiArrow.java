@@ -5,6 +5,8 @@ import java.util.logging.Logger;
 
 import org.bukkit.entity.Arrow;
 import org.bukkit.event.Event;
+import org.bukkit.event.Event.Priority;
+import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.PluginManager;
@@ -37,9 +39,9 @@ public class MultiArrow extends JavaPlugin {
 		this.config = new ConfigHandler(this);
 
 		PluginManager pm = getServer().getPluginManager();
-		pm.registerEvent(Event.Type.PLAYER_INTERACT, playerListener, org.bukkit.event.Event.Priority.Low, this);
-		pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener, org.bukkit.event.Event.Priority.Low, this);
-		pm.registerEvent(Event.Type.ENTITY_DAMAGE, entityListener, org.bukkit.event.Event.Priority.Low, this);
+		pm.registerEvent(Type.PLAYER_INTERACT, playerListener, Priority.Low, this);
+		pm.registerEvent(Type.PLAYER_QUIT, playerListener, Priority.Low, this);
+		pm.registerEvent(Type.ENTITY_DAMAGE, entityListener, Priority.Low, this);
 
 		this.blockHitDetectorThreadId = this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, blockListener, 20L, 10L);
 
