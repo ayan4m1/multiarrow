@@ -33,7 +33,7 @@ public class MultiArrowEntityListener extends EntityListener {
 					if (plugin.chargeFee((Player)arrow.getShooter(), arrowType)) {
 						plugin.activeArrowEffect.get(arrow).hitEntity(arrow, target);
 					}
-					if (plugin.config.getArrowRemove(arrowType) {
+					if (plugin.config.getArrowRemove(arrowType)) {
 						arrow.remove();
 					}
 					plugin.activeArrowEffect.remove(arrow);
