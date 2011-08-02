@@ -13,11 +13,11 @@ import com.ayan4m1.multiarrow.arrows.ArrowType;
 public class ConfigHandler {
 	private MultiArrow plugin;
 	private LinkedHashMap<String, LinkedHashMap> data;
-	private final String defaultConfigFile = "requirements:\nremove-arrow:";
+	private final String defaultConfigFile = "materials:\nremove-arrows:\nfees:\n";
 
 	public int getReqdMaterialId(ArrowType type) {
-		if (data.containsKey("requirements")) {
-			LinkedHashMap<String, Integer> requirements = data.get("requirements");
+		if (data.containsKey("materials")) {
+			LinkedHashMap<String, Integer> requirements = data.get("materials");
 			String typeName = type.toString().toLowerCase();
 			if (requirements != null && requirements.containsKey(typeName)) {
 				try {
@@ -30,8 +30,8 @@ public class ConfigHandler {
 		} else return 0;
 	}
 
-	public boolean getRemoveArrow(ArrowType type) {
-		if (data.containsKey("remove-arrow")) {
+	public boolean getArrowRemove(ArrowType type) {
+		if (data.containsKey("remove-arrows")) {
 			LinkedHashMap<String, Boolean> removals = data.get("remove-arrow");
 			String typeName = type.toString().toLowerCase();
 			if (removals != null && removals.containsKey(typeName)) {
@@ -43,6 +43,9 @@ public class ConfigHandler {
 				}
 			} else return true;
 		} else return true;
+	}
+
+	public Double getArrowFee(ArrowType type) {
 	}
 
 	private boolean createDataDirectory() {
