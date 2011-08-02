@@ -15,7 +15,7 @@ public class ConfigHandler {
 	private LinkedHashMap<String, LinkedHashMap> data;
 	private final String defaultConfigFile = "requirements:\nremove-arrow:";
 
-	public int getRequiredTypeId(ArrowType type) {
+	public int getReqdMaterialId(ArrowType type) {
 		if (data.containsKey("requirements")) {
 			LinkedHashMap<String, Integer> requirements = data.get("requirements");
 			String typeName = type.toString().toLowerCase();
@@ -23,7 +23,7 @@ public class ConfigHandler {
 				try {
 					return requirements.get(typeName);
 				} catch (Exception e) {
-					plugin.log.warning("Invalid value set in config.yml requirements!");
+					plugin.log.warning("Required material must be a block ID for " + typeName + " arrow.");
 					return 0;
 				}
 			} else return 0;
@@ -38,7 +38,7 @@ public class ConfigHandler {
 				try {
 					return removals.get(typeName);
 				} catch (Exception e) {
-					plugin.log.warning("Invalid value set in config.yml remove-arrow!");
+					plugin.log.warning("Removal setting for " + typeName + " arrow must be true or false");
 					return true;
 				}
 			} else return true;

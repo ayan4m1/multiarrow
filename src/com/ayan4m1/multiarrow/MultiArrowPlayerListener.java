@@ -37,7 +37,6 @@ public class MultiArrowPlayerListener extends PlayerListener {
 		Player player = event.getPlayer();
 		if (player.getItemInHand().getType() == Material.BOW) {
 			if (event.getAction() == Action.RIGHT_CLICK_AIR	|| event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-				PlayerInventory inventory = player.getInventory();
 				if (!plugin.activeArrowType.containsKey(player.getName())) {
 					plugin.activeArrowType.put(player.getName(), ArrowType.NORMAL);
 				}
@@ -45,32 +44,35 @@ public class MultiArrowPlayerListener extends PlayerListener {
 				event.setCancelled(true);
 
 				ArrowType arrowType = plugin.activeArrowType.get(player.getName());
+				Integer arrowMaterial = plugin.config.getReqdMaterialId(arrowType);
 
-				if (!player.hasPermission("multiarrow.free") && plugin.config.getRequiredTypeId(arrowType) > 0) {
+				PlayerInventory inventory = player.getInventory();
+				if (!player.hasPermission("multiarrow.free-materials") && arrowMaterial > 0) {
 					try {
-						if (inventory.contains(Material.getMaterial(plugin.config.getRequiredTypeId(arrowType)))) {
-							ItemStack reqdStack = player.getInventory().getItem(player.getInventory().first(Material.getMaterial(plugin.config.getRequiredTypeId(arrowType))));
+						Material reqdMaterial = Material.getMaterial(arrowMaterial);
+						if (inventory.contains(reqdMaterial)) {
+							ItemStack reqdStack = inventory.getItem(inventory.first(reqdMaterial));
 							if (reqdStack.getAmount() > 1) {
 								reqdStack.setAmount(reqdStack.getAmount() - 1);
 							} else {
-								inventory.clear(inventory.first(Material.getMaterial(plugin.config.getRequiredTypeId(arrowType))));
+								inventory.clear(inventory.first(reqdMaterial));
 							}
 						} else {
-							player.sendMessage("You do not have any " + this.toProperCase(Material.getMaterial(plugin.config.getRequiredTypeId(arrowType)).toString().replace('_', ' ')));
+							player.sendMessage("You do not have any " + this.toProperCase(Material.getMaterial(plugin.config.getReqdMaterialId(arrowType)).toString().replace('_', ' ')));
 							return;
 						}
 					} catch (Exception e) {
-						plugin.log.warning("MultiArrow could not check for item with id " + ((Integer)plugin.config.getRequiredTypeId(arrowType)).toString());
+						plugin.log.warning("MultiArrow could not check for item with id " + ((Integer)plugin.config.getReqdMaterialId(arrowType)).toString());
 					}
 				}
 
 				if (!player.hasPermission("multiarrow.infinite")) {
-					if (player.getInventory().contains(Material.ARROW)) {
-						ItemStack arrowStack = player.getInventory().getItem(player.getInventory().first(Material.ARROW));
+					if (inventory.contains(Material.ARROW)) {
+						ItemStack arrowStack = inventory.getItem(inventory.first(Material.ARROW));
 						if (arrowStack.getAmount() > 1) {
 							arrowStack.setAmount(arrowStack.getAmount() - 1);
 						} else {
-							player.getInventory().remove(arrowStack);
+							inventory.remove(arrowStack);
 						}
 					} else {
 						player.sendMessage("Out of arrows!");
