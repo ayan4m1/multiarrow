@@ -46,6 +46,18 @@ public class ConfigHandler {
 	}
 
 	public Double getArrowFee(ArrowType type) {
+		if (data.containsKey("fees")) {
+			LinkedHashMap<String, Double> fees = data.get("fees");
+			String typeName = type.toString().toLowerCase();
+			if (fees != null && fees.containsKey(typeName)) {
+				try {
+					return fees.get(typeName);
+				} catch (Exception e) {
+					plugin.log.warning("Fee for " + typeName + " arrow must end in a decimal (e.g. 100.0)");
+					return 0D;
+				}
+			} else return 0D;
+		} else return 0D;
 	}
 
 	private boolean createDataDirectory() {

@@ -11,6 +11,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import com.ayan4m1.multiarrow.arrows.*;
+import com.iConomy.iConomy;
+import com.iConomy.system.Holdings;
+import com.iConomy.util.Constants;
 
 /**
  * Handle events for all Player related events
@@ -37,11 +40,11 @@ public class MultiArrowPlayerListener extends PlayerListener {
 		Player player = event.getPlayer();
 		if (player.getItemInHand().getType() == Material.BOW) {
 			if (event.getAction() == Action.RIGHT_CLICK_AIR	|| event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+				event.setCancelled(true);
+
 				if (!plugin.activeArrowType.containsKey(player.getName())) {
 					plugin.activeArrowType.put(player.getName(), ArrowType.NORMAL);
 				}
-
-				event.setCancelled(true);
 
 				ArrowType arrowType = plugin.activeArrowType.get(player.getName());
 				Integer arrowMaterial = plugin.config.getReqdMaterialId(arrowType);
@@ -138,7 +141,14 @@ public class MultiArrowPlayerListener extends PlayerListener {
 					plugin.activeArrowType.put(player.getName(), ArrowType.NORMAL);
 				}
 
-				player.sendMessage("Selected " + this.toProperCase(plugin.activeArrowType.get(player.getName()).toString()) + "!");
+				ArrowType arrowType = plugin.activeArrowType.get(player.getName());
+				Double arrowFee = plugin.config.getArrowFee(arrowType);
+				String message = "Selected " + this.toProperCase(arrowType.toString());
+				if (plugin.iConomy != null && arrowFee > 0D) {
+					message += " (" + iConomy.format(arrowFee) + ")";
+				}
+
+				player.sendMessage(message);
 			}
 		}
 	}

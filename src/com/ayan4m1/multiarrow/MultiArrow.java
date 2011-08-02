@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 
 import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
@@ -12,6 +13,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.PluginManager;
 
 import com.ayan4m1.multiarrow.arrows.*;
+import com.iConomy.iConomy;
+import com.iConomy.system.Holdings;
 
 /**
  * MultiArrow for Bukkit
@@ -22,17 +25,43 @@ public class MultiArrow extends JavaPlugin {
     private final MultiArrowPlayerListener playerListener = new MultiArrowPlayerListener(this);
     private final MultiArrowEntityListener entityListener = new MultiArrowEntityListener(this);
     private final MultiArrowBlockHitDetector blockListener = new MultiArrowBlockHitDetector(this);
+    private final MultiArrowServerListener serverListener = new MultiArrowServerListener(this);
     private int blockHitDetectorThreadId;
 
     public Logger log;
     public HashMap<String, ArrowType> activeArrowType;
     public HashMap<Arrow, CustomArrowEffect> activeArrowEffect;
     public ConfigHandler config;
+    public iConomy iConomy;
 
 	public MultiArrow() {
 		this.log = Logger.getLogger("minecraft");
 		this.activeArrowType = new HashMap<String, ArrowType>();
 		this.activeArrowEffect = new HashMap<Arrow, CustomArrowEffect>();
+	}
+
+	public boolean chargeFee(Player player, ArrowType type) {
+		Double arrowFee = config.getArrowFee(type);
+		if (this.iConomy != null && player.hasPermission("multiarrow.free-fees") && arrowFee > 0D) {
+			try {
+				if (iConomy.hasAccount(player.getName())) {
+					Holdings balance = iConomy.getAccount(player.getName()).getHoldings();
+					if (balance.hasEnough(arrowFee)) {
+						balance.subtract(arrowFee);
+						//player.sendMessage("Balance is now " + iConomy.format(balance.balance()) + "");
+					} else {
+						player.sendMessage("You need " + iConomy.format(arrowFee) + ", but only have " + iConomy.format(balance.balance()));
+						return false;
+					}
+				} else {
+					player.sendMessage("Couldn't find your iConomy holdings, cannot pay fee of " + iConomy.format(arrowFee));
+					return false;
+				}
+			} catch (Exception e) {
+				this.log.warning("Exception when trying to charge " + player.getName() + " " + iConomy.format(arrowFee));
+			}
+			return true;
+		} else return true;
 	}
 
 	public void onEnable() {
@@ -42,6 +71,9 @@ public class MultiArrow extends JavaPlugin {
 		pm.registerEvent(Type.PLAYER_INTERACT, playerListener, Priority.Low, this);
 		pm.registerEvent(Type.PLAYER_QUIT, playerListener, Priority.Low, this);
 		pm.registerEvent(Type.ENTITY_DAMAGE, entityListener, Priority.Low, this);
+
+		pm.registerEvent(Type.PLUGIN_ENABLE, serverListener, Priority.Monitor, this);
+		pm.registerEvent(Type.PLUGIN_DISABLE, serverListener, Priority.Monitor, this);
 
 		this.blockHitDetectorThreadId = this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, blockListener, 20L, 10L);
 

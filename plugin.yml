@@ -6,9 +6,12 @@ permissions:
     multiarrow.use.all:
         default: op
         description: Allows use of all arrow types
-    multiarrow.free:
+    multiarrow.free-fees:
+        default: true
+        description: Bypass iConomy fee cost
+    multiarrow.free-materials:
         default: op
-        description: Bypass checks for extra materials
+        description: Bypass extra materials cost
     multiarrow.infinite:
         default: false
         description: Will not not consume arrows when firing

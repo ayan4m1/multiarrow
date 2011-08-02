@@ -7,6 +7,8 @@ import org.bukkit.event.entity.EntityDamageByProjectileEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityListener;
 
+import com.ayan4m1.multiarrow.arrows.ArrowType;
+
 /**
  * MultiArrow entity listener
  * @author ayan4m1
@@ -27,8 +29,11 @@ public class MultiArrowEntityListener extends EntityListener {
 
 				if (plugin.activeArrowEffect.containsKey(arrow)) {
 					event.setCancelled(true);
-					plugin.activeArrowEffect.get(arrow).hitEntity(arrow, target);
-					if (plugin.config.getRemoveArrow(plugin.activeArrowType.get(((Player)arrow.getShooter()).getName()))) {
+					ArrowType arrowType = plugin.activeArrowType.get(((Player)arrow.getShooter()).getName());
+					if (plugin.chargeFee((Player)arrow.getShooter(), arrowType)) {
+						plugin.activeArrowEffect.get(arrow).hitEntity(arrow, target);
+					}
+					if (plugin.config.getArrowRemove(arrowType) {
 						arrow.remove();
 					}
 					plugin.activeArrowEffect.remove(arrow);
