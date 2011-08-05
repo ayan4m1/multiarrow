@@ -119,8 +119,16 @@ public class MultiArrowPlayerListener extends PlayerListener {
 							arrowTypeIndex++;
 						}
 					} else {
+						// If we are at the end, we need to start at the beginning, otherwise advance one
+						int initialIndex;
+						if (arrowTypeIndex == ArrowType.values().length - 1) {
+							arrowTypeIndex = 0;
+							initialIndex = 0;
+						} else {
+							initialIndex = arrowTypeIndex++;
+						}
+
 						// Search for a valid type until looped around
-						int initialIndex = arrowTypeIndex++;
 						while (arrowTypeIndex != initialIndex) {
 							String permissionNode = "multiarrow.use." + ArrowType.values()[arrowTypeIndex].toString().toLowerCase();
 							if (player.hasPermission(permissionNode)) {
