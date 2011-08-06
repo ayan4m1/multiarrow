@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByProjectileEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -28,6 +29,12 @@ public class MultiArrowEntityListener extends EntityListener {
 			Arrow arrow = (Arrow)event.getEntity();
 			ArrowType arrowType = plugin.activeArrowType.get(((Player)arrow.getShooter()).getName());
 			List<Entity> entities = arrow.getNearbyEntities(1D, 1D, 1D);
+			for(int i = 0; i < entities.size(); i++) {
+				if (entities.get(i) instanceof Arrow || entities.get(i) instanceof Item) {
+					entities.clear();
+					break;
+				}
+			}
 			if (entities.size() == 0) {
 				if (plugin.activeArrowEffect.containsKey(arrow)) {
 					if (plugin.chargeFee((Player)arrow.getShooter(), arrowType)) {
