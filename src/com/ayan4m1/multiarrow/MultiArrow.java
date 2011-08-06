@@ -5,7 +5,6 @@ import java.util.logging.Logger;
 
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -24,9 +23,7 @@ import com.iConomy.system.Holdings;
 public class MultiArrow extends JavaPlugin {
     private final MultiArrowPlayerListener playerListener = new MultiArrowPlayerListener(this);
     private final MultiArrowEntityListener entityListener = new MultiArrowEntityListener(this);
-    private final MultiArrowBlockHitDetector blockListener = new MultiArrowBlockHitDetector(this);
     private final MultiArrowServerListener serverListener = new MultiArrowServerListener(this);
-    private int blockHitDetectorThreadId;
 
     public Logger log;
     public HashMap<String, ArrowType> activeArrowType;
@@ -68,14 +65,14 @@ public class MultiArrow extends JavaPlugin {
 		this.config = new ConfigHandler(this);
 
 		PluginManager pm = getServer().getPluginManager();
-		pm.registerEvent(Type.PLAYER_INTERACT, playerListener, Priority.Low, this);
-		pm.registerEvent(Type.PLAYER_QUIT, playerListener, Priority.Low, this);
+		pm.registerEvent(Type.PLAYER_INTERACT, playerListener, Priority.Normal, this);
+		pm.registerEvent(Type.PLAYER_QUIT, playerListener, Priority.Lowest, this);
 		pm.registerEvent(Type.ENTITY_DAMAGE, entityListener, Priority.Low, this);
+
+		pm.registerEvent(Type.PROJECTILE_HIT, entityListener, Priority.Normal, this);
 
 		pm.registerEvent(Type.PLUGIN_ENABLE, serverListener, Priority.Monitor, this);
 		pm.registerEvent(Type.PLUGIN_DISABLE, serverListener, Priority.Monitor, this);
-
-		this.blockHitDetectorThreadId = this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, blockListener, 20L, 10L);
 
 		PluginDescriptionFile pdfFile = this.getDescription();
 		log.info(pdfFile.getName() + " v" + pdfFile.getVersion() + " enabled!");
@@ -84,9 +81,6 @@ public class MultiArrow extends JavaPlugin {
 	public void onDisable() {
 		PluginDescriptionFile pdfFile = this.getDescription();
 		log.info(pdfFile.getName() + " shutting down.");
-
-		this.getServer().getScheduler().cancelTask(this.blockHitDetectorThreadId);
-		this.getServer().getScheduler().cancelTasks(this);
 	}
 }
 

@@ -1,11 +1,14 @@
 package com.ayan4m1.multiarrow;
 
+import java.util.List;
+
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByProjectileEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityListener;
+import org.bukkit.event.entity.ProjectileHitEvent;
 
 import com.ayan4m1.multiarrow.arrows.ArrowType;
 
@@ -20,23 +23,40 @@ public class MultiArrowEntityListener extends EntityListener {
 		plugin = instance;
 	}
 
-	public void onEntityDamage(EntityDamageEvent event) {
-		if (event instanceof EntityDamageByProjectileEvent) {
-			EntityDamageByProjectileEvent eventProjectile = (EntityDamageByProjectileEvent)event;
-			if (eventProjectile.getProjectile() instanceof Arrow) {
-				Arrow arrow = (Arrow) eventProjectile.getProjectile();
-				Entity target = eventProjectile.getEntity();
-
+	public void onProjectileHit(ProjectileHitEvent event) {
+		if (event.getEntity() instanceof Arrow) {
+			Arrow arrow = (Arrow)event.getEntity();
+			ArrowType arrowType = plugin.activeArrowType.get(((Player)arrow.getShooter()).getName());
+			List<Entity> entities = arrow.getNearbyEntities(1D, 1D, 1D);
+			if (entities.size() == 0) {
 				if (plugin.activeArrowEffect.containsKey(arrow)) {
-					event.setCancelled(true);
-					ArrowType arrowType = plugin.activeArrowType.get(((Player)arrow.getShooter()).getName());
 					if (plugin.chargeFee((Player)arrow.getShooter(), arrowType)) {
-						plugin.activeArrowEffect.get(arrow).hitEntity(arrow, target);
+						plugin.activeArrowEffect.get(arrow).hitGround(arrow);
+						plugin.activeArrowEffect.remove(arrow);
 					}
 					if (plugin.config.getArrowRemove(arrowType)) {
 						arrow.remove();
 					}
-					plugin.activeArrowEffect.remove(arrow);
+				}
+			}
+		}
+	}
+
+	public void onEntityDamage(EntityDamageEvent event) {
+		if (event instanceof EntityDamageByProjectileEvent) {
+			EntityDamageByProjectileEvent dpe = ((EntityDamageByProjectileEvent)event);
+			if (dpe.getProjectile() instanceof Arrow) {
+				Arrow arrow = (Arrow)dpe.getProjectile();
+				ArrowType arrowType = plugin.activeArrowType.get(((Player)arrow.getShooter()).getName());
+				if (plugin.activeArrowEffect.containsKey(arrow)) {
+					event.setCancelled(true);
+					if (plugin.chargeFee((Player)arrow.getShooter(), arrowType)) {
+						plugin.activeArrowEffect.get(arrow).hitEntity(arrow, event.getEntity());
+						plugin.activeArrowEffect.remove(arrow);
+					}
+					if (plugin.config.getArrowRemove(arrowType)) {
+						arrow.remove();
+					}
 				}
 			}
 		}
