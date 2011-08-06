@@ -66,10 +66,8 @@ public class MultiArrow extends JavaPlugin {
 
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvent(Type.PLAYER_INTERACT, playerListener, Priority.Normal, this);
-		pm.registerEvent(Type.PLAYER_QUIT, playerListener, Priority.Lowest, this);
-		pm.registerEvent(Type.ENTITY_DAMAGE, entityListener, Priority.Low, this);
-
 		pm.registerEvent(Type.PROJECTILE_HIT, entityListener, Priority.Normal, this);
+		pm.registerEvent(Type.ENTITY_DAMAGE, entityListener, Priority.Low, this);
 
 		pm.registerEvent(Type.PLUGIN_ENABLE, serverListener, Priority.Monitor, this);
 		pm.registerEvent(Type.PLUGIN_DISABLE, serverListener, Priority.Monitor, this);
