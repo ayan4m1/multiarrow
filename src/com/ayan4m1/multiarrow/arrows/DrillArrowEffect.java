@@ -23,6 +23,7 @@ public class DrillArrowEffect implements CustomArrowEffect {
 		for(int y = 0; y >= -2; y--) {
 			//Don't increase the count for snow
 			if (startBlock.getType() == Material.SNOW) {
+				startBlock.setType(Material.AIR);
 				y++;
 			}
 			for (int x = -1; x < 1; x++) {
