@@ -28,7 +28,7 @@ public class MultiArrowEntityListener extends EntityListener {
 		if (event.getEntity() instanceof Arrow) {
 			Arrow arrow = (Arrow)event.getEntity();
 			ArrowType arrowType = plugin.activeArrowType.get(((Player)arrow.getShooter()).getName());
-			List<Entity> entities = arrow.getNearbyEntities(1D, 1D, 1D);
+			List<Entity> entities = arrow.getNearbyEntities(2D, 2D, 2D);
 			for(int i = 0; i < entities.size(); i++) {
 				if (entities.get(i) instanceof Arrow || entities.get(i) instanceof Item) {
 					entities.clear();
@@ -55,8 +55,10 @@ public class MultiArrowEntityListener extends EntityListener {
 			if (dpe.getProjectile() instanceof Arrow) {
 				Arrow arrow = (Arrow)dpe.getProjectile();
 				ArrowType arrowType = plugin.activeArrowType.get(((Player)arrow.getShooter()).getName());
-				if (plugin.activeArrowEffect.containsKey(arrow)) {
+				if (arrowType != ArrowType.NORMAL) {
 					event.setCancelled(true);
+				}
+				if (plugin.activeArrowEffect.containsKey(arrow)) {
 					if (plugin.chargeFee((Player)arrow.getShooter(), arrowType)) {
 						plugin.activeArrowEffect.get(arrow).hitEntity(arrow, event.getEntity());
 						plugin.activeArrowEffect.remove(arrow);
