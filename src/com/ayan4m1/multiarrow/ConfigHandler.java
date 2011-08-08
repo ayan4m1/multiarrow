@@ -6,6 +6,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 
+import org.bukkit.Material;
+import org.bukkit.material.MaterialData;
 import org.yaml.snakeyaml.*;
 
 import com.ayan4m1.multiarrow.arrows.ArrowType;
@@ -15,19 +17,34 @@ public class ConfigHandler {
 	private LinkedHashMap<String, LinkedHashMap> data;
 	private final String defaultConfigFile = "materials:\nremove-arrows:\nfees:\n";
 
-	public int getReqdMaterialId(ArrowType type) {
+	public MaterialData getReqdMaterialData(ArrowType type) {
 		if (data.containsKey("materials")) {
-			LinkedHashMap<String, Integer> requirements = data.get("materials");
+			LinkedHashMap<String, Object> materials = data.get("materials");
 			String typeName = type.toString().toLowerCase();
-			if (requirements != null && requirements.containsKey(typeName)) {
+			if (materials != null && materials.containsKey(typeName)) {
 				try {
-					return requirements.get(typeName);
+					String value = materials.get(typeName).toString();
+					MaterialData r = null;
+					if (value.indexOf(':') > 0) {
+						int blockId = Integer.parseInt(value.substring(0, value.indexOf(':')));
+						byte dataVal = Byte.parseByte(value.substring(value.indexOf(':') + 1));
+						if (blockId == Material.INK_SACK.getId()) {
+							r = new MaterialData(Material.INK_SACK, dataVal);
+						} else if (blockId == Material.WOOL.getId()) {
+							r = new MaterialData(Material.WOOL, dataVal);
+						} else {
+							r = new MaterialData(blockId);
+						}
+					} else {
+						r = new MaterialData(Integer.parseInt(value));
+					}
+					return r;
 				} catch (Exception e) {
-					plugin.log.warning("Required material must be a block ID for " + typeName + " arrow.");
-					return 0;
+					plugin.log.warning("Exception parsing requirement for " + typeName + " arrow");
+					return null;
 				}
-			} else return 0;
-		} else return 0;
+			} else return null;
+		} else return null;
 	}
 
 	public boolean getArrowRemove(ArrowType type) {

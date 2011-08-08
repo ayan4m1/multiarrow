@@ -9,6 +9,7 @@ import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.material.MaterialData;
 
 import com.ayan4m1.multiarrow.arrows.*;
 import com.iConomy.iConomy;
@@ -47,25 +48,32 @@ public class MultiArrowPlayerListener extends PlayerListener {
 				}
 
 				ArrowType arrowType = plugin.activeArrowType.get(player.getName());
-				Integer arrowMaterial = plugin.config.getReqdMaterialId(arrowType);
+				MaterialData arrowMaterial = plugin.config.getReqdMaterialData(arrowType);
+
+				String arrowMaterialName = "";
+				if (arrowMaterial != null) {
+					arrowMaterialName = this.toProperCase(arrowMaterial.getItemType().toString()).replace('_', ' ');
+					if (arrowMaterial.getData() > 0) {
+						arrowMaterialName += " (" + ((Byte)arrowMaterial.getData()).toString() + ")";
+					}
+				}
 
 				PlayerInventory inventory = player.getInventory();
-				if (!player.hasPermission("multiarrow.free-materials") && arrowMaterial > 0) {
+				if (!player.hasPermission("multiarrow.free-materials") && arrowMaterial != null) {
 					try {
-						Material reqdMaterial = Material.getMaterial(arrowMaterial);
-						if (inventory.contains(reqdMaterial)) {
-							ItemStack reqdStack = inventory.getItem(inventory.first(reqdMaterial));
+						if (inventory.contains(arrowMaterial.getItemType())) {
+							ItemStack reqdStack = inventory.getItem(inventory.first(arrowMaterial.getItemType()));
 							if (reqdStack.getAmount() > 1) {
 								reqdStack.setAmount(reqdStack.getAmount() - 1);
 							} else {
-								inventory.clear(inventory.first(reqdMaterial));
+								inventory.clear(inventory.first(arrowMaterial.getItemType()));
 							}
 						} else {
-							player.sendMessage("You do not have any " + this.toProperCase(Material.getMaterial(plugin.config.getReqdMaterialId(arrowType)).toString().replace('_', ' ')));
+							player.sendMessage("You do not have any " + arrowMaterialName);
 							return;
 						}
 					} catch (Exception e) {
-						plugin.log.warning("MultiArrow could not check for item with id " + ((Integer)plugin.config.getReqdMaterialId(arrowType)).toString());
+						plugin.log.warning("MultiArrow could not check for item with id " + arrowMaterialName);
 					}
 				}
 
