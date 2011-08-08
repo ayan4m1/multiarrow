@@ -8,13 +8,10 @@ import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 
 public class WaterArrowEffect implements CustomArrowEffect {
-
-	@Override
 	public void hitEntity(Arrow arrow, Entity target) {
 		this.setToWater(arrow, 2);
 	}
 
-	@Override
 	public void hitGround(Arrow arrow) {
 		this.setToWater(arrow, 1);
 	}

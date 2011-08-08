@@ -7,12 +7,10 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 
 public class TorchArrowEffect implements CustomArrowEffect {
-	@Override
 	public void hitEntity(Arrow arrow, Entity target) {
 		target.setFireTicks(100);
 	}
 
-	@Override
 	public void hitGround(Arrow arrow) {
 		Block targetBlock = arrow.getWorld().getBlockAt(arrow.getLocation());
 

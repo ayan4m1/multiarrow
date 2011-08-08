@@ -8,13 +8,11 @@ import org.bukkit.entity.Entity;
 
 public class AnimalArrowEffect implements CustomArrowEffect {
 	private CreatureType[] allowedAnimals = {CreatureType.CHICKEN, CreatureType.COW, CreatureType.PIG, CreatureType.SHEEP};
-		
-	@Override
+
 	public void hitEntity(Arrow arrow, Entity target) {
 		arrow.getWorld().spawnCreature(arrow.getLocation(), getRandomAnimal());
 	}
 
-	@Override
 	public void hitGround(Arrow arrow) {
 		arrow.getWorld().spawnCreature(arrow.getLocation(), getRandomAnimal());
 	}

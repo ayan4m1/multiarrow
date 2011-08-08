@@ -9,12 +9,10 @@ import org.bukkit.event.entity.ExplosionPrimeEvent;
 
 public class ExplosiveArrowEffect implements CustomArrowEffect {
 
-	@Override
 	public void hitEntity(Arrow arrow, Entity target) {
 		this.triggerExplosion(arrow, 2.0F);
 	}
 
-	@Override
 	public void hitGround(Arrow arrow) {
 		this.triggerExplosion(arrow, 2.5F);
 	}

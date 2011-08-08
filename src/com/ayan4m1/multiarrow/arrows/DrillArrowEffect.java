@@ -9,12 +9,10 @@ import org.bukkit.util.Vector;
 
 public class DrillArrowEffect implements CustomArrowEffect {
 
-	@Override
 	public void hitEntity(Arrow arrow, Entity target) {
 		this.drillDown(target.getWorld().getBlockAt(target.getLocation()));
 	}
 
-	@Override
 	public void hitGround(Arrow arrow) {
 		this.drillDown(arrow.getWorld().getBlockAt(arrow.getLocation()));
 	}
