@@ -11,8 +11,9 @@ into CraftBukkit as of build 1000.
 
 ## Usage
 
-When holding a bow, left click to change arrow types. Right
-click to fire the selected arrow type.
+When holding a bow, left click to select the next arrow type.
+Hold down Sneak (left shift by default) to select the previous
+arrow type. Right click to fire the selected arrow type.
 
 ## Permissions
 
@@ -21,7 +22,9 @@ possible to control which arrow types users have access to.
 
 1. multiarrow.use.all allows users to use all arrow types
 2. multiarrow.use.<name> allows users to use a specific arrow type
-3. multiarrow.free bypasses the check for required items
+3. multiarrow.free-materials bypasses the check for required items
+4. multiarrow.free-fees bypasses the check for iConomy fees
+5. multiarrow.infinite allows users to fire infinite arrows
 
 
 ## Arrow Types
@@ -34,6 +37,7 @@ The following arrow types are currently implemented:
 4. Water - Creates source water at target
 5. Torch - Creates a torch at target or lights an entity on fire
 6. Animal - Spawns a friendly mob at target
+7. Teleport - Teleports the player to a random location nearby
 
 ## Custom Arrow Types
 
