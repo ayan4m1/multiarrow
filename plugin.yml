@@ -6,6 +6,9 @@ permissions:
     multiarrow.use.all:
         default: op
         description: Allows use of all arrow types
+    multiarrow.use.normal:
+        default: true
+        description: Allows use of normal arrows
     multiarrow.free-fees:
         default: true
         description: Bypass iConomy fee cost
