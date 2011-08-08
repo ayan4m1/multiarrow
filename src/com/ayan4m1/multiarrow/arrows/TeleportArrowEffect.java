@@ -25,6 +25,7 @@ public class TeleportArrowEffect implements CustomArrowEffect {
 		while (!newLoc.getBlock().isEmpty() && newLoc.getY() < 127) {
 			newLoc.add(0, 1, 0);
 		}
+		newLoc.setPitch(0F);
 		arrow.getShooter().teleport(newLoc);
 	}
 }
