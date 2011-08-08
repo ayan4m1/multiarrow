@@ -119,33 +119,32 @@ public class MultiArrowPlayerListener extends PlayerListener {
 
 					// If player can use all arrow types, select next type
 					if (player.hasPermission("multiarrow.use.all")) {
-						if (arrowTypeIndex == ArrowType.values().length - 1) {
-							arrowTypeIndex = 0;
-						} else {
-							arrowTypeIndex++;
-						}
+						arrowTypeIndex = this.nextArrowIndex(arrowTypeIndex, player.isSneaking());
 					} else {
-						// If we are at the end, we need to start at the beginning, otherwise advance one
-						int initialIndex;
-						if (arrowTypeIndex == ArrowType.values().length - 1) {
-							arrowTypeIndex = 0;
-							initialIndex = 0;
-						} else {
-							initialIndex = arrowTypeIndex++;
-						}
+						//Start with the next arrow type
+						int initialIndex = arrowTypeIndex;
+						arrowTypeIndex = this.nextArrowIndex(arrowTypeIndex, player.isSneaking());
 
-						// Search for a valid type until looped around
+						//Search for a valid type until looped around
 						while (arrowTypeIndex != initialIndex) {
 							String permissionNode = "multiarrow.use." + ArrowType.values()[arrowTypeIndex].toString().toLowerCase();
 							if (player.hasPermission(permissionNode)) {
 								break;
 							}
 
-							if (arrowTypeIndex == ArrowType.values().length - 1) {
-								arrowTypeIndex = 0;
-								break;
+							if (player.isSneaking()) {
+								if (arrowTypeIndex == 0) {
+									arrowTypeIndex = ArrowType.values().length - 1;
+								} else {
+									arrowTypeIndex--;
+								}
 							} else {
-								arrowTypeIndex++;
+								if (arrowTypeIndex == ArrowType.values().length - 1) {
+									arrowTypeIndex = 0;
+									break;
+								} else {
+									arrowTypeIndex++;
+								}
 							}
 						}
 					}
@@ -165,5 +164,23 @@ public class MultiArrowPlayerListener extends PlayerListener {
 				player.sendMessage(message);
 			}
 		}
+	}
+
+	private int nextArrowIndex(int startIndex, boolean isSneaking) {
+		int currentIndex = startIndex;
+		if (isSneaking) {
+			if (currentIndex == 0) {
+				currentIndex = ArrowType.values().length - 1;
+			} else {
+				currentIndex--;
+			}
+		} else {
+			if (currentIndex == ArrowType.values().length - 1) {
+				currentIndex = 0;
+			} else {
+				currentIndex++;
+			}
+		}
+		return currentIndex;
 	}
 }
