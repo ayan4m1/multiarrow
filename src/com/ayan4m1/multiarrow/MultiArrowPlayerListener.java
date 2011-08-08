@@ -13,8 +13,6 @@ import org.bukkit.material.MaterialData;
 
 import com.ayan4m1.multiarrow.arrows.*;
 import com.iConomy.iConomy;
-import com.iConomy.system.Holdings;
-import com.iConomy.util.Constants;
 
 /**
  * Handle events for all Player related events
