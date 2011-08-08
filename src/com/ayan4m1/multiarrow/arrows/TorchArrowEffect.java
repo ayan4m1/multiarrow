@@ -18,10 +18,12 @@ public class TorchArrowEffect implements CustomArrowEffect {
 			targetBlock.setType(Material.AIR);
 		}
 
-		if (!targetBlock.isEmpty()) {
+		while (!targetBlock.isEmpty() && targetBlock.getY() < 127) {
 			targetBlock = targetBlock.getRelative(BlockFace.UP);
 		}
 
-		targetBlock.setType(Material.TORCH);
+		if (targetBlock.isEmpty()) {
+			targetBlock.setType(Material.TORCH);
+		}
 	}
 }
