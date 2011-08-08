@@ -24,7 +24,7 @@ public class ConfigHandler {
 			if (materials != null && materials.containsKey(typeName)) {
 				try {
 					String value = materials.get(typeName).toString();
-					MaterialData r = null;
+					MaterialData r = new MaterialData(Material.AIR);
 					if (value.indexOf(':') > 0) {
 						int blockId = Integer.parseInt(value.substring(0, value.indexOf(':')));
 						byte dataVal = Byte.parseByte(value.substring(value.indexOf(':') + 1));
@@ -36,15 +36,15 @@ public class ConfigHandler {
 							r = new MaterialData(blockId);
 						}
 					} else {
-						r = new MaterialData(Integer.parseInt(value));
+						r = new MaterialData(Material.getMaterial(Integer.parseInt(value)));
 					}
 					return r;
 				} catch (Exception e) {
 					plugin.log.warning("Exception parsing requirement for " + typeName + " arrow");
-					return null;
+					return new MaterialData(Material.AIR);
 				}
-			} else return null;
-		} else return null;
+			} else return new MaterialData(Material.AIR);
+		} else return new MaterialData(Material.AIR);
 	}
 
 	public boolean getArrowRemove(ArrowType type) {

@@ -48,30 +48,22 @@ public class MultiArrowPlayerListener extends PlayerListener {
 				ArrowType arrowType = plugin.activeArrowType.get(player.getName());
 				MaterialData arrowMaterial = plugin.config.getReqdMaterialData(arrowType);
 
-				String arrowMaterialName = "";
-				if (arrowMaterial != null) {
-					arrowMaterialName = this.toProperCase(arrowMaterial.getItemType().toString()).replace('_', ' ');
+				PlayerInventory inventory = player.getInventory();
+				if (!player.hasPermission("multiarrow.free-materials") && arrowMaterial.getItemType() != Material.AIR) {
+					String arrowMaterialName = arrowMaterial.getItemType().toString().toLowerCase().replace('_', ' ');
 					if (arrowMaterial.getData() > 0) {
 						arrowMaterialName += " (" + ((Byte)arrowMaterial.getData()).toString() + ")";
 					}
-				}
-
-				PlayerInventory inventory = player.getInventory();
-				if (!player.hasPermission("multiarrow.free-materials") && arrowMaterial != null) {
-					try {
-						if (inventory.contains(arrowMaterial.getItemType())) {
-							ItemStack reqdStack = inventory.getItem(inventory.first(arrowMaterial.getItemType()));
-							if (reqdStack.getAmount() > 1) {
-								reqdStack.setAmount(reqdStack.getAmount() - 1);
-							} else {
-								inventory.clear(inventory.first(arrowMaterial.getItemType()));
-							}
+					if (inventory.contains(arrowMaterial.getItemType())) {
+						ItemStack reqdStack = inventory.getItem(inventory.first(arrowMaterial.getItemType()));
+						if (reqdStack.getAmount() > 1) {
+							reqdStack.setAmount(reqdStack.getAmount() - 1);
 						} else {
-							player.sendMessage("You do not have any " + arrowMaterialName);
-							return;
+							inventory.clear(inventory.first(arrowMaterial.getItemType()));
 						}
-					} catch (Exception e) {
-						plugin.log.warning("MultiArrow could not check for item with id " + arrowMaterialName);
+					} else {
+						player.sendMessage("You do not have any " + arrowMaterialName);
+						return;
 					}
 				}
 
