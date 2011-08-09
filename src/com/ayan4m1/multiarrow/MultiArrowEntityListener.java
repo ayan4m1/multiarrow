@@ -58,20 +58,27 @@ public class MultiArrowEntityListener extends EntityListener {
 	public void onEntityDamage(EntityDamageEvent event) {
 		if (event instanceof EntityDamageByProjectileEvent) {
 			EntityDamageByProjectileEvent dpe = ((EntityDamageByProjectileEvent)event);
-			if (dpe.getProjectile() instanceof Arrow) {
-				Arrow arrow = (Arrow)dpe.getProjectile();
-				ArrowType arrowType = plugin.activeArrowType.get(((Player)arrow.getShooter()).getName());
-				if (arrowType != ArrowType.NORMAL) {
-					event.setCancelled(true);
+			if (!(dpe.getProjectile() instanceof Arrow)) {
+				return;
+			}
+
+			Arrow arrow = (Arrow)dpe.getProjectile();
+			if (!(arrow.getShooter() instanceof Player)) {
+				return;
+			}
+
+			ArrowType arrowType = plugin.activeArrowType.get(((Player)arrow.getShooter()).getName());
+			if (arrowType != ArrowType.NORMAL) {
+				event.setCancelled(true);
+			}
+
+			if (plugin.activeArrowEffect.containsKey(arrow)) {
+				if (plugin.chargeFee((Player)arrow.getShooter(), arrowType)) {
+					plugin.activeArrowEffect.get(arrow).hitEntity(arrow, event.getEntity());
+					plugin.activeArrowEffect.remove(arrow);
 				}
-				if (plugin.activeArrowEffect.containsKey(arrow)) {
-					if (plugin.chargeFee((Player)arrow.getShooter(), arrowType)) {
-						plugin.activeArrowEffect.get(arrow).hitEntity(arrow, event.getEntity());
-						plugin.activeArrowEffect.remove(arrow);
-					}
-					if (plugin.config.getArrowRemove(arrowType)) {
-						arrow.remove();
-					}
+				if (plugin.config.getArrowRemove(arrowType)) {
+					arrow.remove();
 				}
 			}
 		}
