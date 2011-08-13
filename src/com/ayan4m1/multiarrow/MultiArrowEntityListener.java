@@ -12,6 +12,10 @@ import org.bukkit.event.entity.EntityListener;
 import org.bukkit.event.entity.ProjectileHitEvent;
 
 import com.ayan4m1.multiarrow.arrows.ArrowType;
+import com.ayan4m1.multiarrow.arrows.ArrowEffect;
+import com.ayan4m1.multiarrow.arrows.TimedArrowEffect;
+import com.iConomy.iConomy;
+import com.iConomy.system.Holdings;
 
 /**
  * Listens for entity events and raises arrow effect events
@@ -22,6 +26,30 @@ public class MultiArrowEntityListener extends EntityListener {
 
 	public MultiArrowEntityListener(MultiArrow instance) {
 		plugin = instance;
+	}
+
+	public boolean chargeFee(Player player, ArrowType type) {
+		Double arrowFee = plugin.config.getArrowFee(type);
+		if (plugin.iconomy != null && player.hasPermission("multiarrow.free-fees") && arrowFee > 0D) {
+			try {
+				if (iConomy.hasAccount(player.getName())) {
+					Holdings balance = iConomy.getAccount(player.getName()).getHoldings();
+					if (balance.hasEnough(arrowFee)) {
+						balance.subtract(arrowFee);
+						//player.sendMessage("Balance is now " + iConomy.format(balance.balance()) + "");
+					} else {
+						player.sendMessage("You need " + iConomy.format(arrowFee) + ", but only have " + iConomy.format(balance.balance()));
+						return false;
+					}
+				} else {
+					player.sendMessage("Couldn't find your iConomy holdings, cannot pay fee of " + iConomy.format(arrowFee));
+					return false;
+				}
+			} catch (Exception e) {
+				plugin.log.warning("Exception when trying to charge " + player.getName() + " " + iConomy.format(arrowFee));
+			}
+			return true;
+		} else return true;
 	}
 
 	public void onProjectileHit(ProjectileHitEvent event) {
@@ -35,6 +63,8 @@ public class MultiArrowEntityListener extends EntityListener {
 		}
 
 		ArrowType arrowType = plugin.activeArrowType.get(((Player)arrow.getShooter()).getName());
+
+		//We should ignore this event if there is a targetable entity within one block
 		List<Entity> entities = arrow.getNearbyEntities(1D, 1D, 1D);
 		int entCount = entities.size();
 		for(Entity ent : entities) {
@@ -42,14 +72,34 @@ public class MultiArrowEntityListener extends EntityListener {
 				entCount--;
 			}
 		}
+
+		//Only raise the onGroundHitEvent if there are no valid entities nearby
 		if (entCount == 0) {
-			if (plugin.activeArrowEffect.containsKey(arrow)) {
-				if (plugin.chargeFee((Player)arrow.getShooter(), arrowType)) {
-					plugin.activeArrowEffect.get(arrow).hitGround(arrow);
-					plugin.activeArrowEffect.remove(arrow);
-				}
-				if (plugin.config.getArrowRemove(arrowType)) {
-					arrow.remove();
+			if (arrowType != ArrowType.NORMAL) {
+				if (this.chargeFee((Player)arrow.getShooter(), arrowType)) {
+					ArrowEffect arrowEffect = null;
+
+					String className = plugin.toProperCase(arrowType.toString()) + "ArrowEffect";
+					try {
+						arrowEffect = (ArrowEffect)Class.forName("com.ayan4m1.multiarrow.arrows." + className).newInstance();
+					} catch (ClassNotFoundException e) {
+						plugin.log.warning("Failed to find class " + className);
+					} catch (InstantiationException e) {
+						plugin.log.warning("Could not instantiate class " + className);
+					} catch (IllegalAccessException e) {
+						plugin.log.warning("Could not access class " + className);
+					}
+
+					arrowEffect.onGroundHitEvent(arrow);
+
+					if (plugin.config.getArrowRemove(arrowType)) {
+						arrow.remove();
+					}
+
+					if (arrowEffect instanceof TimedArrowEffect) {
+						TimedArrowEffect timedArrowEffect = (TimedArrowEffect)arrowEffect;
+						plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, timedArrowEffect.getDelayTriggerRunnable(arrow), timedArrowEffect.getDelayTicks());
+					}
 				}
 			}
 		}
@@ -72,13 +122,31 @@ public class MultiArrowEntityListener extends EntityListener {
 				event.setCancelled(true);
 			}
 
-			if (plugin.activeArrowEffect.containsKey(arrow)) {
-				if (plugin.chargeFee((Player)arrow.getShooter(), arrowType)) {
-					plugin.activeArrowEffect.get(arrow).hitEntity(arrow, event.getEntity());
-					plugin.activeArrowEffect.remove(arrow);
-				}
-				if (plugin.config.getArrowRemove(arrowType)) {
-					arrow.remove();
+			if (arrowType != ArrowType.NORMAL) {
+				if (this.chargeFee((Player)arrow.getShooter(), arrowType)) {
+					ArrowEffect arrowEffect = null;
+
+					String className = plugin.toProperCase(arrowType.toString()) + "ArrowEffect";
+					try {
+						arrowEffect = (ArrowEffect)Class.forName("com.ayan4m1.multiarrow.arrows." + className).newInstance();
+					} catch (ClassNotFoundException e) {
+						plugin.log.warning("Failed to find class " + className);
+					} catch (InstantiationException e) {
+						plugin.log.warning("Could not instantiate class " + className);
+					} catch (IllegalAccessException e) {
+						plugin.log.warning("Could not access class " + className);
+					}
+
+					arrowEffect.onEntityHitEvent(arrow, event.getEntity());
+
+					if (plugin.config.getArrowRemove(arrowType)) {
+						arrow.remove();
+					}
+
+					if (arrowEffect instanceof TimedArrowEffect) {
+						TimedArrowEffect timedArrowEffect = (TimedArrowEffect)arrowEffect;
+						plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, timedArrowEffect.getDelayTriggerRunnable(arrow), timedArrowEffect.getDelayTicks());
+					}
 				}
 			}
 		}

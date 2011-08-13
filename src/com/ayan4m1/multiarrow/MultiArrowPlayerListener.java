@@ -1,7 +1,6 @@
 package com.ayan4m1.multiarrow;
 
 import org.bukkit.Material;
-import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -23,10 +22,6 @@ public class MultiArrowPlayerListener extends PlayerListener {
 
 	public MultiArrowPlayerListener(MultiArrow instance) {
 		plugin = instance;
-	}
-
-	private String toProperCase(String input) {
-		return input.substring(0, 1).toUpperCase() + input.substring(1).toLowerCase();
 	}
 
 	public void onPlayerQuit(PlayerQuitEvent event) {
@@ -84,26 +79,7 @@ public class MultiArrowPlayerListener extends PlayerListener {
 				//HACK: Without this the arrow count does not update correctly
 				player.updateInventory();
 
-				Arrow arrow = player.shootArrow();
-
-				if (arrowType != ArrowType.NORMAL) {
-					CustomArrowEffect arrowEffect = null;
-
-					String className = this.toProperCase(arrowType.toString()) + "ArrowEffect";
-					try {
-						arrowEffect = (CustomArrowEffect) Class.forName("com.ayan4m1.multiarrow.arrows." + className).newInstance();
-					} catch (ClassNotFoundException e) {
-						plugin.log.warning("Failed to find class " + className);
-					} catch (InstantiationException e) {
-						plugin.log.warning("Could not instantiate class " + className);
-					} catch (IllegalAccessException e) {
-						plugin.log.warning("Could not access class " + className);
-					}
-
-					if (arrowEffect != null) {
-						plugin.activeArrowEffect.put(arrow, arrowEffect);
-					}
-				}
+				player.shootArrow();
 			} else if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
 				if (plugin.activeArrowType.containsKey(player.getName())) {
 					// Get the currently selected arrow type for our player
@@ -148,7 +124,7 @@ public class MultiArrowPlayerListener extends PlayerListener {
 
 				ArrowType arrowType = plugin.activeArrowType.get(player.getName());
 				Double arrowFee = plugin.config.getArrowFee(arrowType);
-				String message = "Selected " + this.toProperCase(arrowType.toString());
+				String message = "Selected " + plugin.toProperCase(arrowType.toString());
 				if (plugin.iconomy != null && arrowFee > 0D) {
 					message += " (" + iConomy.format(arrowFee) + ")";
 				}
