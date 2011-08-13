@@ -82,7 +82,7 @@ public class ConfigHandler {
 	}
 
 	private boolean createDataDirectory() {
-	    File file = this.plugin.getDataFolder();
+	    File file = plugin.getDataFolder();
 	    if (!file.isDirectory()){
 	        if (!file.mkdirs()) {
 	            return false;
@@ -95,10 +95,10 @@ public class ConfigHandler {
 		this.plugin = instance;
 		if (this.createDataDirectory()) {
 			Yaml yaml = new Yaml();
-			File configFile = new File(this.plugin.getDataFolder().getAbsolutePath() + File.separator + "config.yml");
+			File configFile = new File(plugin.getDataFolder().getAbsolutePath() + File.separator + "config.yml");
 			try {
 				if (!configFile.exists()) {
-					this.plugin.log.info("MultiArrow created new config.yml");
+					plugin.log.info(plugin.getDescription().getName() + " created new config.yml");
 					configFile.createNewFile();
 					if (configFile.canWrite()) {
 						FileOutputStream fo = new FileOutputStream(configFile);
@@ -110,14 +110,13 @@ public class ConfigHandler {
 				FileInputStream fs = new FileInputStream(configFile);
 				this.data = (LinkedHashMap<String, LinkedHashMap>)yaml.load(fs);
 				if (this.data == null) {
-					this.plugin.log.warning("MultiArrow could not load config.yml");
+					plugin.log.warning(plugin.getDescription().getName() + " could not load " + plugin.getDescription().getName() + "/config.yml");
 				}
 			} catch (IOException e) {
-				this.plugin.log.warning("IOException reading MultiArrow/config.yml + (" + e.getMessage() + ")");
+				plugin.log.warning("Error reading " + plugin.getDescription().getName() + "/config.yml + (" + e.getMessage() + ")");
 			}
 		} else {
-			this.plugin.log.warning("MultiArrow could not create a plugin directory!");
-			this.plugin.log.info("MultiArrow continuing with no config...");
+			plugin.log.warning(plugin.getDescription().getName() + " could not find or create a configuration file!");
 		}
 	}
 }
