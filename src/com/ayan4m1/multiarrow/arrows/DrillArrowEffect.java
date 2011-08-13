@@ -7,13 +7,12 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 
-public class DrillArrowEffect implements CustomArrowEffect {
-
-	public void hitEntity(Arrow arrow, Entity target) {
+public class DrillArrowEffect implements ArrowEffect {
+	public void onEntityHitEvent(Arrow arrow, Entity target) {
 		this.drillDown(target.getWorld().getBlockAt(target.getLocation()));
 	}
 
-	public void hitGround(Arrow arrow) {
+	public void onGroundHitEvent(Arrow arrow) {
 		this.drillDown(arrow.getWorld().getBlockAt(arrow.getLocation()));
 	}
 	

@@ -7,13 +7,12 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 
-public class ExplosiveArrowEffect implements CustomArrowEffect {
-
-	public void hitEntity(Arrow arrow, Entity target) {
+public class ExplosiveArrowEffect implements ArrowEffect {
+	public void onEntityHitEvent(Arrow arrow, Entity target) {
 		this.triggerExplosion(arrow, 2.0F);
 	}
 
-	public void hitGround(Arrow arrow) {
+	public void onGroundHitEvent(Arrow arrow) {
 		this.triggerExplosion(arrow, 2.5F);
 	}
 

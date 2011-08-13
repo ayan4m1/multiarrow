@@ -6,14 +6,14 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
 
-public class AnimalArrowEffect implements CustomArrowEffect {
+public class AnimalArrowEffect implements ArrowEffect {
 	private CreatureType[] allowedAnimals = {CreatureType.CHICKEN, CreatureType.COW, CreatureType.PIG, CreatureType.SHEEP};
 
-	public void hitEntity(Arrow arrow, Entity target) {
+	public void onEntityHitEvent(Arrow arrow, Entity target) {
 		arrow.getWorld().spawnCreature(arrow.getLocation(), getRandomAnimal());
 	}
 
-	public void hitGround(Arrow arrow) {
+	public void onGroundHitEvent(Arrow arrow) {
 		arrow.getWorld().spawnCreature(arrow.getLocation(), getRandomAnimal());
 	}
 	

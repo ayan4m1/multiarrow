@@ -6,10 +6,8 @@ import org.bukkit.Location;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 
-public class TeleportArrowEffect implements CustomArrowEffect {
-
-	@Override
-	public void hitEntity(Arrow arrow, Entity target) {
+public class TeleportArrowEffect implements ArrowEffect {
+	public void onEntityHitEvent(Arrow arrow, Entity target) {
 		Random r = new Random();
 		Location newLoc = target.getLocation().add(r.nextInt(10) - 5, r.nextInt(10) - 5, r.nextInt(10) - 5);
 		while (!newLoc.getBlock().isEmpty() && newLoc.getY() < 127) {
@@ -18,8 +16,7 @@ public class TeleportArrowEffect implements CustomArrowEffect {
 		target.teleport(newLoc);
 	}
 
-	@Override
-	public void hitGround(Arrow arrow) {
+	public void onGroundHitEvent(Arrow arrow) {
 		Random r = new Random();
 		Location newLoc = arrow.getLocation().add(r.nextInt(5) - 2, r.nextInt(5) - 2, r.nextInt(5) - 2);
 		while (!newLoc.getBlock().isEmpty() && newLoc.getY() < 127) {

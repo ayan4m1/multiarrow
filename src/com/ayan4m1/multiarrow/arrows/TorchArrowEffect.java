@@ -6,12 +6,12 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 
-public class TorchArrowEffect implements CustomArrowEffect {
-	public void hitEntity(Arrow arrow, Entity target) {
+public class TorchArrowEffect implements ArrowEffect {
+	public void onEntityHitEvent(Arrow arrow, Entity target) {
 		target.setFireTicks(100);
 	}
 
-	public void hitGround(Arrow arrow) {
+	public void onGroundHitEvent(Arrow arrow) {
 		Block targetBlock = arrow.getWorld().getBlockAt(arrow.getLocation());
 
 		if (targetBlock.getType() == Material.SNOW) {
