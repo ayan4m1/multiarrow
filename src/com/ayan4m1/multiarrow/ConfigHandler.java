@@ -12,6 +12,10 @@ import org.yaml.snakeyaml.*;
 
 import com.ayan4m1.multiarrow.arrows.ArrowType;
 
+/**
+ * Reads and parses data from YAML configuration file
+ * @author ayan4m1
+ */
 public class ConfigHandler {
 	private MultiArrow plugin;
 	private LinkedHashMap<String, LinkedHashMap> data;

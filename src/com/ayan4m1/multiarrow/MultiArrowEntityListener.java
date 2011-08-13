@@ -14,7 +14,7 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 import com.ayan4m1.multiarrow.arrows.ArrowType;
 
 /**
- * MultiArrow entity listener
+ * Listens for entity events and raises arrow effect events
  * @author ayan4m1
  */
 public class MultiArrowEntityListener extends EntityListener {

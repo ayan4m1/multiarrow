@@ -15,7 +15,7 @@ import com.ayan4m1.multiarrow.arrows.*;
 import com.iConomy.iConomy;
 
 /**
- * Handle events for all Player related events
+ * Changes arrow types, fires arrows
  * @author ayan4m1
  */
 public class MultiArrowPlayerListener extends PlayerListener {

@@ -7,6 +7,10 @@ import org.bukkit.plugin.Plugin;
 
 import com.iConomy.iConomy;
 
+/**
+ * Handles external plugin integration
+ * @author ayan4m1
+ */
 public class MultiArrowServerListener extends ServerListener {
 	private MultiArrow plugin;
 

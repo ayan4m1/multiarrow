@@ -17,7 +17,6 @@ import com.iConomy.system.Holdings;
 
 /**
  * MultiArrow for Bukkit
- *
  * @author ayan4m1
  */
 public class MultiArrow extends JavaPlugin {
