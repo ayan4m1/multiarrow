@@ -15,13 +15,14 @@ When holding a bow, left click to select the next arrow type.
 Hold down Sneak (left shift by default) to select the previous
 arrow type. Right click to fire the selected arrow type.
 
-## Permissions
+## SuperPerms / PermissionsBukkit
 
 Using the new permissions system built into CraftBukkit, it is
-possible to control which arrow types users have access to.
+possible to control which arrow types users have access to, among
+other things.
 
 1. multiarrow.use.all allows users to use all arrow types
-2. multiarrow.use.<name> allows users to use a specific arrow type
+2. multiarrow.use.\<name\> allows users to use a specific arrow type
 3. multiarrow.free-materials bypasses the check for required items
 4. multiarrow.free-fees bypasses the check for iConomy fees
 5. multiarrow.infinite allows users to fire infinite arrows
@@ -41,9 +42,9 @@ The following arrow types are currently implemented:
 
 ## Custom Arrow Types
 
-You can easily define your own arrow types. Simply add a class
-to the 'com.ayan4m1.multiarrow.arrows' package. Your class must
-implement CustomArrowEffect. The hitEntity method tells you
-that an arrow of this type has hit an entity, and the hitGround
-method likewise informs you that this type of arrow has been
-lodged in a block.
+You can easily define your own arrow types. Check out a copy of the code (or make your own fork on GitHub) and add a class to the 'com.ayan4m1.multiarrow.arrows' package. It should be named <name>ArrowEffect, e.g. TorchArrowEffect.
+Your class must implement either ArrowEffect or TimedArrowEffect. The only difference is that TimedArrowEffect also raises an event a certain amount of time after the arrow effect has occured. You can use this to create an arrow that only modifies an area temporarily, or which has a two-stage effect.
+The onEntityHitEvent and onGroundHitEvent methods are raised when one of your arrows hits an entity or the ground, respectively. If they should perform the exact same action, you should define a private method and then call it from both event handlers (look at the Drill arrow for an example of this).
+If you implement TimedArrowEffect, you should also implement a getDelayTriggerRunnable and getDelayTicks method. The former should construct a new Runnable which will perform your delayed second effect. Make sure the Arrow parameter is declared as final so the Runnable can access it (see the Water arrow for an example of this). The getDelayTicks method simply returns a long integer representing the number of ticks before the event is raised.
+Finally, you will need to add your arrow type name (the <name> part of the original example) to the ArrowType enumeration. Simply insert your arrow type at the position you would like it to occupy in the selection list.
+If any of this seems unclear, I encourage you to look at the source code and try to start from an existing custom type.
