@@ -25,7 +25,7 @@ public class ConfigHandler {
 		if (data.containsKey("options")) {
 			LinkedHashMap<String, Object> options = data.get("options");
 			if (options.containsKey(key)) {
-				return data.get(key);
+				return options.get(key);
 			} else return false;
 		} else return false;
 	}
