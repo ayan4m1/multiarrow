@@ -36,7 +36,7 @@ public class MultiArrowEntityListener extends EntityListener {
 					Holdings balance = iConomy.getAccount(player.getName()).getHoldings();
 					if (balance.hasEnough(arrowFee)) {
 						balance.subtract(arrowFee);
-						if (plugin.config.getOptionValue("send-balance-on-fee") != null && (Boolean)plugin.config.getOptionValue("send-balance-on-fee")) {
+						if ((Boolean)plugin.config.getOptionValue("send-balance-on-fee") == true) {
 							player.sendMessage("Balance is now " + iConomy.format(balance.balance()) + "");
 						}
 					} else {
