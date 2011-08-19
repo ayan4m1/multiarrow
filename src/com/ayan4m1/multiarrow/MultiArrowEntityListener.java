@@ -30,7 +30,7 @@ public class MultiArrowEntityListener extends EntityListener {
 
 	public boolean chargeFee(Player player, ArrowType type) {
 		Double arrowFee = plugin.config.getArrowFee(type);
-		if (plugin.iconomy != null && player.hasPermission("multiarrow.free-fees") && arrowFee > 0D) {
+		if (plugin.iconomy != null && !player.hasPermission("multiarrow.free-fees") && arrowFee > 0D) {
 			try {
 				if (iConomy.hasAccount(player.getName())) {
 					Holdings balance = iConomy.getAccount(player.getName()).getHoldings();
