@@ -13,7 +13,7 @@ public class WaterArrowEffect implements TimedArrowEffect {
 	}
 
 	public void onGroundHitEvent(Arrow arrow) {
-		this.setToWater(arrow, 2);
+		this.setToWater(arrow, 1);
 	}
 
 	public Runnable getDelayTriggerRunnable(final Arrow arrow) {
@@ -24,7 +24,7 @@ public class WaterArrowEffect implements TimedArrowEffect {
 					for (int y = -2; y <= 2; y++) {
 						for (int z = -2; z <= 2; z++) {
 							Block block = arrow.getWorld().getBlockAt(new Location(arrow.getWorld(), centerLoc.getX() + x, centerLoc.getY() + y, centerLoc.getZ() + z));
-							if (block.isLiquid()) {
+							if (block.getTypeId() == 8 || block.getTypeId() == 9) {
 								block.setType(Material.AIR);
 							}
 						}
