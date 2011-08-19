@@ -19,7 +19,16 @@ import com.ayan4m1.multiarrow.arrows.ArrowType;
 public class ConfigHandler {
 	private MultiArrow plugin;
 	private LinkedHashMap<String, LinkedHashMap> data;
-	private final String defaultConfigFile = "materials:\nremove-arrows:\nfees:\n";
+	private final String defaultConfigFile = "materials:\nremove-arrows:\nfees:\noptions:\n    send-balance-on-fee: true";
+
+	public Object getOptionValue(String key) {
+		if (data.containsKey("options")) {
+			LinkedHashMap<String, Object> options = data.get("options");
+			if (options.containsKey(key)) {
+				return data.get(key);
+			} else return false;
+		} else return false;
+	}
 
 	public MaterialData getReqdMaterialData(ArrowType type) {
 		if (data.containsKey("materials")) {
