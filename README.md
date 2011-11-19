@@ -3,6 +3,11 @@ MultiArrow
 
 MultiArrow is a custom/multiple arrow plugin for CraftBukkit.
 
+## License
+
+MultiArrow is released under the GNU Lesser General Public
+License. See the included LICENSE file for more information.
+
 ## Dependencies
 
 MultiArrow is only compatible with CraftBukkit build(s) 1000+.
