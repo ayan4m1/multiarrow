@@ -3,6 +3,7 @@ package in.thekreml.plugins.multiarrow;
 import in.thekreml.plugins.multiarrow.arrows.*;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -84,7 +85,7 @@ public class MultiArrowPlayerListener implements Listener {
 				//HACK: Without this the arrow count does not update correctly
 				player.updateInventory();
 
-				player.shootArrow();
+				player.launchProjectile(Arrow.class);
 			} else if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
 				if (plugin.activeArrowType.containsKey(player.getName())) {
 					// Get the currently selected arrow type for our player
