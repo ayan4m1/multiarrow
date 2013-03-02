@@ -10,9 +10,7 @@ License. See the included LICENSE file for more information.
 
 ## Dependencies
 
-MultiArrow is only compatible with CraftBukkit build(s) 1000+.
-It relies on the new permissions system which was integrated
-into CraftBukkit as of build 1000.
+MultiArrow is compatible with CraftBukkit v1.4.7-R1.0.
 
 ## Usage
 

@@ -1,4 +1,8 @@
-package com.ayan4m1.multiarrow;
+package in.thekreml.plugins.multiarrow;
+
+import in.thekreml.plugins.multiarrow.arrows.ArrowEffect;
+import in.thekreml.plugins.multiarrow.arrows.ArrowType;
+import in.thekreml.plugins.multiarrow.arrows.TimedArrowEffect;
 
 import java.util.List;
 
@@ -6,22 +10,21 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityListener;
 import org.bukkit.event.entity.ProjectileHitEvent;
 
-import com.ayan4m1.multiarrow.arrows.ArrowType;
-import com.ayan4m1.multiarrow.arrows.ArrowEffect;
-import com.ayan4m1.multiarrow.arrows.TimedArrowEffect;
-import com.iConomy.iConomy;
-import com.iConomy.system.Holdings;
+/*import com.iConomy.iConomy;
+import com.iConomy.system.Holdings;*/
 
 /**
  * Listens for entity events and raises arrow effect events
  * @author ayan4m1
  */
-public class MultiArrowEntityListener extends EntityListener {
+public class MultiArrowEntityListener implements Listener {
 	private MultiArrow plugin;
 
 	public MultiArrowEntityListener(MultiArrow instance) {
@@ -29,7 +32,8 @@ public class MultiArrowEntityListener extends EntityListener {
 	}
 
 	public boolean chargeFee(Player player, ArrowType type) {
-		Double arrowFee = plugin.config.getArrowFee(type);
+		return true;
+		/*Double arrowFee = plugin.config.getArrowFee(type);
 		if (plugin.iconomy != null && !player.hasPermission("multiarrow.free-fees") && arrowFee > 0D) {
 			try {
 				if (iConomy.hasAccount(player.getName())) {
@@ -51,9 +55,10 @@ public class MultiArrowEntityListener extends EntityListener {
 				plugin.log.warning("Exception when trying to charge " + player.getName() + " " + iConomy.format(arrowFee));
 			}
 			return true;
-		} else return true;
+		} else return true;*/
 	}
 
+	@EventHandler
 	public void onProjectileHit(ProjectileHitEvent event) {
 		if (!(event.getEntity() instanceof Arrow)) {
 			return;
@@ -83,7 +88,7 @@ public class MultiArrowEntityListener extends EntityListener {
 
 					String className = plugin.toProperCase(arrowType.toString()) + "ArrowEffect";
 					try {
-						arrowEffect = (ArrowEffect)Class.forName("com.ayan4m1.multiarrow.arrows." + className).newInstance();
+						arrowEffect = (ArrowEffect)Class.forName("in.thekreml.plugins.multiarrow.arrows." + className).newInstance();
 					} catch (ClassNotFoundException e) {
 						plugin.log.warning("Failed to find class " + className);
 					} catch (InstantiationException e) {
@@ -107,6 +112,7 @@ public class MultiArrowEntityListener extends EntityListener {
 		}
 	}
 
+	@EventHandler(priority=EventPriority.LOW)
 	public void onEntityDamage(EntityDamageEvent event) {
 		if (event.getCause() != EntityDamageEvent.DamageCause.PROJECTILE) {
 			return;

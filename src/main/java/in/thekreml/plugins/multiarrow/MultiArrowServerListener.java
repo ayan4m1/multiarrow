@@ -1,36 +1,38 @@
-package com.ayan4m1.multiarrow;
+package in.thekreml.plugins.multiarrow;
 
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
-import org.bukkit.event.server.ServerListener;
 import org.bukkit.plugin.Plugin;
 
-import com.iConomy.iConomy;
+//import com.iConomy.iConomy;
 
 /**
  * Handles external plugin integration
  * @author ayan4m1
  */
-public class MultiArrowServerListener extends ServerListener {
+public class MultiArrowServerListener implements Listener {
 	private MultiArrow plugin;
 
 	public MultiArrowServerListener(MultiArrow instance) {
 		this.plugin = instance;
 	}
 
-	@Override
+	@EventHandler(priority=EventPriority.MONITOR)
 	public void onPluginDisable(PluginDisableEvent event) {
-		if (plugin.iconomy != null) {
+		/*if (plugin.iconomy != null) {
 			if (event.getPlugin().getDescription().getName().equals("iConomy")) {
 				plugin.iconomy = null;
 				plugin.log.info("MultiArrow unhooked from iConomy.");
 			}
-		}
+		}*/
 	}
 
-	@Override
+	@EventHandler(priority=EventPriority.MONITOR)
 	public void onPluginEnable(PluginEnableEvent event) {
-		if (plugin.iconomy == null) {
+		/*if (plugin.iconomy == null) {
 			Plugin iConomy = plugin.getServer().getPluginManager().getPlugin("iConomy");
 
 			if (iConomy != null) {
@@ -39,6 +41,6 @@ public class MultiArrowServerListener extends ServerListener {
 					plugin.log.info("MultiArrow hooked into iConomy.");
 				}
 			}
-		}
+		}*/
 	}
 }

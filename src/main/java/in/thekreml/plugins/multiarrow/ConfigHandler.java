@@ -1,4 +1,6 @@
-package com.ayan4m1.multiarrow;
+package in.thekreml.plugins.multiarrow;
+
+import in.thekreml.plugins.multiarrow.arrows.ArrowType;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,7 +12,6 @@ import org.bukkit.Material;
 import org.bukkit.material.MaterialData;
 import org.yaml.snakeyaml.*;
 
-import com.ayan4m1.multiarrow.arrows.ArrowType;
 
 /**
  * Reads and parses data from YAML configuration file

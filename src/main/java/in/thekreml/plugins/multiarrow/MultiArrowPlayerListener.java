@@ -1,35 +1,40 @@
-package com.ayan4m1.multiarrow;
+package in.thekreml.plugins.multiarrow;
+
+import in.thekreml.plugins.multiarrow.arrows.*;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.material.MaterialData;
 
-import com.ayan4m1.multiarrow.arrows.*;
-import com.iConomy.iConomy;
+//import com.iConomy.iConomy;
 
 /**
  * Changes arrow types, fires arrows
  * @author ayan4m1
  */
-public class MultiArrowPlayerListener extends PlayerListener {
+public class MultiArrowPlayerListener implements Listener {
 	private final MultiArrow plugin;
 
 	public MultiArrowPlayerListener(MultiArrow instance) {
 		plugin = instance;
 	}
 
+	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		if (plugin.activeArrowType.containsKey(event.getPlayer().getName())) {
 			plugin.activeArrowType.remove(event.getPlayer().getName());
 		}
 	}
 
+	@EventHandler(priority=EventPriority.HIGH)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
 		if (player.getItemInHand().getType() == Material.BOW) {
@@ -125,9 +130,9 @@ public class MultiArrowPlayerListener extends PlayerListener {
 				ArrowType arrowType = plugin.activeArrowType.get(player.getName());
 				Double arrowFee = plugin.config.getArrowFee(arrowType);
 				String message = "Selected " + plugin.toProperCase(arrowType.toString());
-				if (plugin.iconomy != null && arrowFee > 0D) {
+				/*if (plugin.iconomy != null && arrowFee > 0D) {
 					message += " (" + iConomy.format(arrowFee) + ")";
-				}
+				}*/
 
 				player.sendMessage(message);
 			}

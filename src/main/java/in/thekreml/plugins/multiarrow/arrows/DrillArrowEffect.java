@@ -1,4 +1,4 @@
-package com.ayan4m1.multiarrow.arrows;
+package in.thekreml.plugins.multiarrow.arrows;
 
 import org.bukkit.Location;
 import org.bukkit.Material;

@@ -1,8 +1,8 @@
-package com.ayan4m1.multiarrow.arrows;
+package in.thekreml.plugins.multiarrow.arrows;
 
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.CraftWorld;
-import org.bukkit.craftbukkit.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_4_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_4_R1.entity.CraftEntity;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
@@ -21,7 +21,7 @@ public class ExplosiveArrowEffect implements ArrowEffect {
 		arrow.getServer().getPluginManager().callEvent(event);
 		if (!event.isCancelled()) {
 			Location loc = arrow.getLocation();
-			((CraftWorld)arrow.getWorld()).getHandle().createExplosion(((CraftEntity)arrow).getHandle(), loc.getX(), loc.getY(), loc.getZ(), radius, false);
+			((CraftWorld)arrow.getWorld()).getHandle().createExplosion(((CraftEntity)arrow).getHandle(), loc.getX(), loc.getY(), loc.getZ(), radius, false, true);
 		}
 	}
 }

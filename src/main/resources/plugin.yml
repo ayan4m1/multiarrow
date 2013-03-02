@@ -1,5 +1,5 @@
 name: MultiArrow
-main: com.ayan4m1.multiarrow.MultiArrow
+main: in.thekreml.plugins.multiarrow.MultiArrow
 author: ayan4m1
 version: 0.9.8
 permissions:
