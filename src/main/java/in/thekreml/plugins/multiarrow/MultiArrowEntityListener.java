@@ -91,10 +91,13 @@ public class MultiArrowEntityListener implements Listener {
 						arrowEffect = (ArrowEffect)Class.forName("in.thekreml.plugins.multiarrow.arrows." + className).newInstance();
 					} catch (ClassNotFoundException e) {
 						plugin.log.warning("Failed to find class " + className);
+						return;
 					} catch (InstantiationException e) {
 						plugin.log.warning("Could not instantiate class " + className);
+						return;
 					} catch (IllegalAccessException e) {
 						plugin.log.warning("Could not access class " + className);
+						return;
 					}
 
 					arrowEffect.onGroundHitEvent(arrow);
@@ -143,10 +146,13 @@ public class MultiArrowEntityListener implements Listener {
 					arrowEffect = (ArrowEffect)Class.forName("com.ayan4m1.multiarrow.arrows." + className).newInstance();
 				} catch (ClassNotFoundException e) {
 					plugin.log.warning("Failed to find class " + className);
+					return;
 				} catch (InstantiationException e) {
 					plugin.log.warning("Could not instantiate class " + className);
+					return;
 				} catch (IllegalAccessException e) {
 					plugin.log.warning("Could not access class " + className);
+					return;
 				}
 
 				arrowEffect.onEntityHitEvent(arrow, event.getEntity());
