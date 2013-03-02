@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>in.thekreml.plugins</groupId>
 	<artifactId>multiarrow</artifactId>
-	<version>0.9.8</version>
+	<version>0.9.8a</version>
 	<name>MultiArrow</name>
 	<repositories>
 		<repository>
