@@ -5,21 +5,21 @@ import in.thekreml.plugins.multiarrow.ArrowEffect;
 import java.util.Random;
 
 import org.bukkit.entity.Arrow;
-import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 
 public class AnimalArrowEffect implements ArrowEffect {
-	private CreatureType[] allowedAnimals = {CreatureType.CHICKEN, CreatureType.COW, CreatureType.PIG, CreatureType.SHEEP};
+	private EntityType[] allowedAnimals = {EntityType.CHICKEN, EntityType.COW, EntityType.PIG, EntityType.SHEEP};
 
 	public void onEntityHitEvent(Arrow arrow, Entity target) {
-		arrow.getWorld().spawnCreature(arrow.getLocation(), getRandomAnimal());
+		arrow.getWorld().spawnEntity(arrow.getLocation(), getRandomAnimal());
 	}
 
 	public void onGroundHitEvent(Arrow arrow) {
-		arrow.getWorld().spawnCreature(arrow.getLocation(), getRandomAnimal());
+		arrow.getWorld().spawnEntity(arrow.getLocation(), getRandomAnimal());
 	}
 	
-	private CreatureType getRandomAnimal() {
+	private EntityType getRandomAnimal() {
 		Random r = new Random();
 		int index = r.nextInt(allowedAnimals.length);
 		return allowedAnimals[index];
