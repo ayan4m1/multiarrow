@@ -9,7 +9,7 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 
-public class ExplosiveArrowEffect implements ArrowEffect {
+public class Explosive implements ArrowEffect {
 	public void onEntityHitEvent(Arrow arrow, Entity target) {
 		this.triggerExplosion(arrow, 2.0F);
 	}

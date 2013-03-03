@@ -9,7 +9,7 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 
-public class DrillArrowEffect implements ArrowEffect {
+public class Drill implements ArrowEffect {
 	public void onEntityHitEvent(Arrow arrow, Entity target) {
 		this.drillDown(target.getWorld().getBlockAt(target.getLocation()));
 	}

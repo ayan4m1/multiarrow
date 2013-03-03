@@ -5,7 +5,7 @@ import in.thekreml.plugins.multiarrow.ArrowEffect;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 
-public class LightningArrowEffect implements ArrowEffect {
+public class Lightning implements ArrowEffect {
 	public void onEntityHitEvent(Arrow arrow, Entity target) {
 		arrow.getWorld().strikeLightning(arrow.getLocation());
 	}

@@ -8,7 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 
-public class TeleportArrowEffect implements ArrowEffect {
+public class Teleport implements ArrowEffect {
 	public void onEntityHitEvent(Arrow arrow, Entity target) {
 		Random r = new Random();
 		Location newLoc = target.getLocation().add(r.nextInt(10) - 5, r.nextInt(10) - 5, r.nextInt(10) - 5);

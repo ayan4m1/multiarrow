@@ -8,7 +8,7 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
-public class AnimalArrowEffect implements ArrowEffect {
+public class Animal implements ArrowEffect {
 	private EntityType[] allowedAnimals = {EntityType.CHICKEN, EntityType.COW, EntityType.PIG, EntityType.SHEEP};
 
 	public void onEntityHitEvent(Arrow arrow, Entity target) {

@@ -9,7 +9,7 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 
-public class WaterArrowEffect implements TimedArrowEffect {
+public class Water implements TimedArrowEffect {
 	public void onEntityHitEvent(Arrow arrow, Entity target) {
 		this.setToWater(arrow, 1);
 	}

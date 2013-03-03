@@ -8,7 +8,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 
-public class TorchArrowEffect implements ArrowEffect {
+public class Torch implements ArrowEffect {
 	public void onEntityHitEvent(Arrow arrow, Entity target) {
 		target.setFireTicks(100);
 	}
