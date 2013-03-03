@@ -1,4 +1,4 @@
-package in.thekreml.plugins.multiarrow.arrows;
+package in.thekreml.plugins.multiarrow;
 
 import org.bukkit.entity.Arrow;
 

@@ -1,8 +1,6 @@
 package in.thekreml.plugins.multiarrow;
 
-import in.thekreml.plugins.multiarrow.arrows.ArrowEffect;
 import in.thekreml.plugins.multiarrow.arrows.ArrowType;
-import in.thekreml.plugins.multiarrow.arrows.TimedArrowEffect;
 
 import java.util.List;
 

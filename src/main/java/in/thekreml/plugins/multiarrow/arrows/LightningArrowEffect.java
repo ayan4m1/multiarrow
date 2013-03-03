@@ -1,5 +1,7 @@
 package in.thekreml.plugins.multiarrow.arrows;
 
+import in.thekreml.plugins.multiarrow.ArrowEffect;
+
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 

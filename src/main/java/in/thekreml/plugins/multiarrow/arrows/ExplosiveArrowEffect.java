@@ -1,5 +1,7 @@
 package in.thekreml.plugins.multiarrow.arrows;
 
+import in.thekreml.plugins.multiarrow.ArrowEffect;
+
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_4_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_4_R1.entity.CraftEntity;
