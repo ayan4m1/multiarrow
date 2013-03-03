@@ -1,7 +1,7 @@
 name: MultiArrow
 main: in.thekreml.plugins.multiarrow.MultiArrow
 author: ayan4m1
-version: 0.9.8a
+version: 0.9.9
 permissions:
     multiarrow.use.all:
         default: op
