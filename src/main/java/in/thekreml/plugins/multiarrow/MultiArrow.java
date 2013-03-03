@@ -1,7 +1,7 @@
 package in.thekreml.plugins.multiarrow;
 
 import in.thekreml.plugins.multiarrow.ConfigHandler;
-import in.thekreml.plugins.multiarrow.arrows.ArrowType;
+import in.thekreml.plugins.multiarrow.arrows.ArrowTypes;
 
 import java.util.HashMap;
 import java.util.logging.Logger;
@@ -22,18 +22,13 @@ public class MultiArrow extends JavaPlugin {
     private final MultiArrowEntityListener entityListener = new MultiArrowEntityListener(this);
     private final MultiArrowServerListener serverListener = new MultiArrowServerListener(this);
 
-    public Logger log;
-    public HashMap<String, ArrowType> activeArrowType;
+    public ArrowTypes arrowTypes = new ArrowTypes();
+    public HashMap<String, Integer> activeArrow;
     public ConfigHandler config;
     //public iConomy iconomy;
 
 	public MultiArrow() {
-		this.log = Logger.getLogger("Minecraft");
-		this.activeArrowType = new HashMap<String, ArrowType>();
-	}
-
-	public String toProperCase(String input) {
-		return input.substring(0, 1).toUpperCase() + input.substring(1).toLowerCase();
+		this.activeArrow = new HashMap<String, Integer>();
 	}
 
 	public void onEnable() {
@@ -45,12 +40,13 @@ public class MultiArrow extends JavaPlugin {
 		pm.registerEvents(serverListener, this);
 
 		PluginDescriptionFile pdfFile = this.getDescription();
-		log.info(pdfFile.getName() + " v" + pdfFile.getVersion() + " enabled!");
+		logger.info(pdfFile.getName() + " v" + pdfFile.getVersion() + " enabled!");
 	}
 
 	public void onDisable() {
 		PluginDescriptionFile pdfFile = this.getDescription();
-		log.info(pdfFile.getName() + " shutting down.");
+		logger.info(pdfFile.getName() + " shutting down.");
 	}
-}
 
+	private static final Logger logger = Logger.getLogger("Minecraft");
+}

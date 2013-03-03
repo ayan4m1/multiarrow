@@ -1,12 +1,11 @@
 package in.thekreml.plugins.multiarrow;
 
-import in.thekreml.plugins.multiarrow.arrows.ArrowType;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.LinkedHashMap;
+import java.util.logging.Logger;
 
 import org.bukkit.Material;
 import org.bukkit.material.MaterialData;
@@ -31,10 +30,10 @@ public class ConfigHandler {
 		} else return false;
 	}
 
-	public MaterialData getReqdMaterialData(ArrowType type) {
+	public MaterialData getReqdMaterialData(String arrowType) {
 		if (data.containsKey("materials")) {
 			LinkedHashMap<String, Object> materials = data.get("materials");
-			String typeName = type.toString().toLowerCase();
+			String typeName = arrowType.toLowerCase();
 			if (materials != null && materials.containsKey(typeName)) {
 				try {
 					String value = materials.get(typeName).toString();
@@ -54,37 +53,37 @@ public class ConfigHandler {
 					}
 					return r;
 				} catch (Exception e) {
-					plugin.log.warning("Exception parsing requirement for " + typeName + " arrow");
+					logger.warning("Exception parsing requirement for " + typeName + " arrow");
 					return new MaterialData(Material.AIR);
 				}
 			} else return new MaterialData(Material.AIR);
 		} else return new MaterialData(Material.AIR);
 	}
 
-	public boolean getArrowRemove(ArrowType type) {
+	public boolean getArrowRemove(String arrowType) {
 		if (data.containsKey("remove-arrows")) {
 			LinkedHashMap<String, Boolean> removals = data.get("remove-arrow");
-			String typeName = type.toString().toLowerCase();
+			String typeName = arrowType.toLowerCase();
 			if (removals != null && removals.containsKey(typeName)) {
 				try {
 					return removals.get(typeName);
 				} catch (Exception e) {
-					plugin.log.warning("Removal setting for " + typeName + " arrow must be true or false");
+					logger.warning("Removal setting for " + typeName + " arrow must be true or false");
 					return true;
 				}
 			} else return true;
 		} else return true;
 	}
 
-	public Double getArrowFee(ArrowType type) {
+	public Double getArrowFee(String arrowType) {
 		if (data.containsKey("fees")) {
 			LinkedHashMap<String, Double> fees = data.get("fees");
-			String typeName = type.toString().toLowerCase();
+			String typeName = arrowType.toLowerCase();
 			if (fees != null && fees.containsKey(typeName)) {
 				try {
 					return fees.get(typeName);
 				} catch (Exception e) {
-					plugin.log.warning("Fee for " + typeName + " arrow must end in a decimal (e.g. 100.0)");
+					logger.warning("Fee for " + typeName + " arrow must end in a decimal (e.g. 100.0)");
 					return 0D;
 				}
 			} else return 0D;
@@ -108,7 +107,7 @@ public class ConfigHandler {
 			File configFile = new File(plugin.getDataFolder().getAbsolutePath() + File.separator + "config.yml");
 			try {
 				if (!configFile.exists()) {
-					plugin.log.info(plugin.getDescription().getName() + " created new config.yml");
+					logger.info(plugin.getDescription().getName() + " created new config.yml");
 					configFile.createNewFile();
 					if (configFile.canWrite()) {
 						FileOutputStream fo = new FileOutputStream(configFile);
@@ -120,13 +119,15 @@ public class ConfigHandler {
 				FileInputStream fs = new FileInputStream(configFile);
 				this.data = (LinkedHashMap<String, LinkedHashMap>)yaml.load(fs);
 				if (this.data == null) {
-					plugin.log.warning(plugin.getDescription().getName() + " could not load " + plugin.getDescription().getName() + "/config.yml");
+					logger.warning(plugin.getDescription().getName() + " could not load " + plugin.getDescription().getName() + "/config.yml");
 				}
 			} catch (IOException e) {
-				plugin.log.warning("Error reading " + plugin.getDescription().getName() + "/config.yml + (" + e.getMessage() + ")");
+				logger.warning("Error reading " + plugin.getDescription().getName() + "/config.yml + (" + e.getMessage() + ")");
 			}
 		} else {
-			plugin.log.warning(plugin.getDescription().getName() + " could not find or create a configuration file!");
+			logger.warning(plugin.getDescription().getName() + " could not find or create a configuration file!");
 		}
 	}
+
+	private static final Logger logger = Logger.getLogger("Minecraft");
 }

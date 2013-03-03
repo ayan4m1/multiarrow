@@ -1,7 +1,5 @@
 package in.thekreml.plugins.multiarrow;
 
-import in.thekreml.plugins.multiarrow.arrows.ArrowType;
-
 import java.util.List;
 
 import org.bukkit.entity.Arrow;
@@ -29,7 +27,7 @@ public class MultiArrowEntityListener implements Listener {
 		plugin = instance;
 	}
 
-	public boolean chargeFee(Player player, ArrowType type) {
+	public boolean chargeFee(Player player, String arrowType) {
 		return true;
 		/*Double arrowFee = plugin.config.getArrowFee(type);
 		if (plugin.iconomy != null && !player.hasPermission("multiarrow.free-fees") && arrowFee > 0D) {
@@ -67,7 +65,10 @@ public class MultiArrowEntityListener implements Listener {
 			return;
 		}
 
-		ArrowType arrowType = plugin.activeArrowType.get(((Player)arrow.getShooter()).getName());
+		Integer arrowIndex = plugin.activeArrow.get(((Player)arrow.getShooter()).getName());
+		if (arrowIndex == -1) {
+			return;
+		}
 
 		//We should ignore this event if there is a targetable entity within one block
 		List<Entity> entities = arrow.getNearbyEntities(1D, 1D, 1D);
@@ -80,34 +81,18 @@ public class MultiArrowEntityListener implements Listener {
 
 		//Only raise the onGroundHitEvent if there are no valid entities nearby
 		if (entCount == 0) {
-			if (arrowType != ArrowType.NORMAL) {
-				if (this.chargeFee((Player)arrow.getShooter(), arrowType)) {
-					ArrowEffect arrowEffect = null;
+			String arrowType = plugin.arrowTypes.getName(arrowIndex);
+			if (this.chargeFee((Player)arrow.getShooter(), arrowType)) {
+				ArrowEffect arrowEffect = plugin.arrowTypes.getType(arrowType);
+				arrowEffect.onGroundHitEvent(arrow);
 
-					String className = plugin.toProperCase(arrowType.toString()) + "ArrowEffect";
-					try {
-						arrowEffect = (ArrowEffect)Class.forName("in.thekreml.plugins.multiarrow.arrows." + className).newInstance();
-					} catch (ClassNotFoundException e) {
-						plugin.log.warning("Failed to find class " + className);
-						return;
-					} catch (InstantiationException e) {
-						plugin.log.warning("Could not instantiate class " + className);
-						return;
-					} catch (IllegalAccessException e) {
-						plugin.log.warning("Could not access class " + className);
-						return;
-					}
+				if (plugin.config.getArrowRemove(arrowType)) {
+					arrow.remove();
+				}
 
-					arrowEffect.onGroundHitEvent(arrow);
-
-					if (plugin.config.getArrowRemove(arrowType)) {
-						arrow.remove();
-					}
-
-					if (arrowEffect instanceof TimedArrowEffect) {
-						TimedArrowEffect timedArrowEffect = (TimedArrowEffect)arrowEffect;
-						plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, timedArrowEffect.getDelayTriggerRunnable(arrow), timedArrowEffect.getDelayTicks());
-					}
+				if (arrowEffect instanceof TimedArrowEffect) {
+					TimedArrowEffect timedArrowEffect = (TimedArrowEffect)arrowEffect;
+					plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, timedArrowEffect.getDelayTriggerRunnable(arrow), timedArrowEffect.getDelayTicks());
 				}
 			}
 		}
@@ -133,36 +118,24 @@ public class MultiArrowEntityListener implements Listener {
 			return;
 		}
 
-		ArrowType arrowType = plugin.activeArrowType.get(((Player)arrow.getShooter()).getName());
-		if (arrowType != ArrowType.NORMAL) {
-			event.setCancelled(true);
-			if (this.chargeFee((Player)arrow.getShooter(), arrowType)) {
-				ArrowEffect arrowEffect = null;
+		Integer arrowIndex = plugin.activeArrow.get(((Player)arrow.getShooter()).getName());
+		if (arrowIndex == -1) {
+			return;
+		}
 
-				String className = plugin.toProperCase(arrowType.toString()) + "ArrowEffect";
-				try {
-					arrowEffect = (ArrowEffect)Class.forName("com.ayan4m1.multiarrow.arrows." + className).newInstance();
-				} catch (ClassNotFoundException e) {
-					plugin.log.warning("Failed to find class " + className);
-					return;
-				} catch (InstantiationException e) {
-					plugin.log.warning("Could not instantiate class " + className);
-					return;
-				} catch (IllegalAccessException e) {
-					plugin.log.warning("Could not access class " + className);
-					return;
-				}
+		event.setCancelled(true);
+		String arrowType = plugin.arrowTypes.getName(arrowIndex);
+		if (this.chargeFee((Player)arrow.getShooter(), arrowType)) {
+			ArrowEffect arrowEffect = plugin.arrowTypes.getType(arrowType);
+			arrowEffect.onEntityHitEvent(arrow, event.getEntity());
 
-				arrowEffect.onEntityHitEvent(arrow, event.getEntity());
+			if (plugin.config.getArrowRemove(arrowType)) {
+				arrow.remove();
+			}
 
-				if (plugin.config.getArrowRemove(arrowType)) {
-					arrow.remove();
-				}
-
-				if (arrowEffect instanceof TimedArrowEffect) {
-					TimedArrowEffect timedArrowEffect = (TimedArrowEffect)arrowEffect;
-					plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, timedArrowEffect.getDelayTriggerRunnable(arrow), timedArrowEffect.getDelayTicks());
-				}
+			if (arrowEffect instanceof TimedArrowEffect) {
+				TimedArrowEffect timedArrowEffect = (TimedArrowEffect)arrowEffect;
+				plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, timedArrowEffect.getDelayTriggerRunnable(arrow), timedArrowEffect.getDelayTicks());
 			}
 		}
 	}

@@ -1,7 +1,5 @@
 package in.thekreml.plugins.multiarrow;
 
-import in.thekreml.plugins.multiarrow.arrows.*;
-
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
@@ -30,8 +28,8 @@ public class MultiArrowPlayerListener implements Listener {
 
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
-		if (plugin.activeArrowType.containsKey(event.getPlayer().getName())) {
-			plugin.activeArrowType.remove(event.getPlayer().getName());
+		if (plugin.activeArrow.containsKey(event.getPlayer().getName())) {
+			plugin.activeArrow.remove(event.getPlayer().getName());
 		}
 	}
 
@@ -42,119 +40,108 @@ public class MultiArrowPlayerListener implements Listener {
 			if (event.getAction() == Action.RIGHT_CLICK_AIR	|| event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 				event.setCancelled(true);
 
-				if (!plugin.activeArrowType.containsKey(player.getName())) {
-					plugin.activeArrowType.put(player.getName(), ArrowType.NORMAL);
+				if (!plugin.activeArrow.containsKey(player.getName())) {
+					plugin.activeArrow.put(player.getName(), -1);
 				}
 
-				ArrowType arrowType = plugin.activeArrowType.get(player.getName());
-				MaterialData arrowMaterial = plugin.config.getReqdMaterialData(arrowType);
-
-				PlayerInventory inventory = player.getInventory();
-				if (!player.hasPermission("multiarrow.free-materials") && arrowMaterial.getItemType() != Material.AIR) {
-					String arrowMaterialName = arrowMaterial.getItemType().toString().toLowerCase().replace('_', ' ');
-					if (arrowMaterial.getData() > 0) {
-						arrowMaterialName += " (" + ((Byte)arrowMaterial.getData()).toString() + ")";
-					}
-					if (inventory.contains(arrowMaterial.getItemType())) {
-						ItemStack reqdStack = inventory.getItem(inventory.first(arrowMaterial.getItemType()));
-						if (reqdStack.getAmount() > 1) {
-							reqdStack.setAmount(reqdStack.getAmount() - 1);
-						} else {
-							inventory.clear(inventory.first(arrowMaterial.getItemType()));
-						}
-					} else {
-						player.sendMessage("You do not have any " + arrowMaterialName);
-						return;
-					}
+				if (canFire(player)) {
+					player.launchProjectile(Arrow.class);
 				}
-
-				if (!player.hasPermission("multiarrow.infinite")) {
-					if (inventory.contains(Material.ARROW)) {
-						ItemStack arrowStack = inventory.getItem(inventory.first(Material.ARROW));
-						if (arrowStack.getAmount() > 1) {
-							arrowStack.setAmount(arrowStack.getAmount() - 1);
-						} else {
-							inventory.remove(arrowStack);
-						}
-					} else {
-						player.sendMessage("Out of arrows!");
-						return;
-					}
-				}
-
-				//HACK: Without this the arrow count does not update correctly
-				player.updateInventory();
-
-				player.launchProjectile(Arrow.class);
 			} else if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
-				if (plugin.activeArrowType.containsKey(player.getName())) {
-					// Get the currently selected arrow type for our player
-					int arrowTypeIndex = plugin.activeArrowType.get(player.getName()).ordinal();
-
-					// If player can use all arrow types, select next type
-					if (player.hasPermission("multiarrow.use.all")) {
-						arrowTypeIndex = this.nextArrowIndex(arrowTypeIndex, player.isSneaking());
-					} else {
-						//Start with the next arrow type
-						int initialIndex = arrowTypeIndex;
-						arrowTypeIndex = this.nextArrowIndex(arrowTypeIndex, player.isSneaking());
-
-						//Search for a valid type until looped around
-						while (arrowTypeIndex != initialIndex) {
-							String permissionNode = "multiarrow.use." + ArrowType.values()[arrowTypeIndex].toString().toLowerCase();
-							if (player.hasPermission(permissionNode)) {
-								break;
-							}
-
-							if (player.isSneaking()) {
-								if (arrowTypeIndex == 0) {
-									arrowTypeIndex = ArrowType.values().length - 1;
-								} else {
-									arrowTypeIndex--;
-								}
-							} else {
-								if (arrowTypeIndex == ArrowType.values().length - 1) {
-									arrowTypeIndex = 0;
-									break;
-								} else {
-									arrowTypeIndex++;
-								}
-							}
-						}
-					}
-
-					plugin.activeArrowType.put(player.getName(), ArrowType.values()[arrowTypeIndex]);
-				} else {
-					plugin.activeArrowType.put(player.getName(), ArrowType.NORMAL);
-				}
-
-				ArrowType arrowType = plugin.activeArrowType.get(player.getName());
-				Double arrowFee = plugin.config.getArrowFee(arrowType);
-				String message = "Selected " + plugin.toProperCase(arrowType.toString());
+				updateArrowIndex(player);
+				
+				Integer arrowIndex = plugin.activeArrow.get(player.getName());
+				String arrowName = plugin.arrowTypes.getName(arrowIndex);
+				//Double arrowFee = plugin.config.getArrowFee(arrowType);
 				/*if (plugin.iconomy != null && arrowFee > 0D) {
 					message += " (" + iConomy.format(arrowFee) + ")";
 				}*/
-
-				player.sendMessage(message);
+				player.sendMessage(new StringBuilder().append("Selected ").append(arrowName).toString());
 			}
 		}
 	}
 
-	private int nextArrowIndex(int startIndex, boolean isSneaking) {
-		int currentIndex = startIndex;
-		if (isSneaking) {
-			if (currentIndex == 0) {
-				currentIndex = ArrowType.values().length - 1;
-			} else {
-				currentIndex--;
+	private Boolean canFire(Player player) {
+		Integer arrowIndex = plugin.activeArrow.get(player.getName());
+		MaterialData arrowMaterial = plugin.config.getReqdMaterialData(plugin.arrowTypes.getName(arrowIndex));
+
+		PlayerInventory inventory = player.getInventory();
+		if (!player.hasPermission("multiarrow.free-materials")
+				&& !arrowMaterial.getItemType().equals(Material.AIR)) {
+			String arrowMaterialName = arrowMaterial.getItemType().toString().toLowerCase().replace('_', ' ');
+			if (arrowMaterial.getData() > 0) {
+				arrowMaterialName += " (" + ((Byte)arrowMaterial.getData()).toString() + ")";
 			}
+			if (inventory.contains(arrowMaterial.getItemType())) {
+				ItemStack reqdStack = inventory.getItem(inventory.first(arrowMaterial.getItemType()));
+				if (reqdStack.getAmount() > 1) {
+					reqdStack.setAmount(reqdStack.getAmount() - 1);
+				} else {
+					inventory.clear(inventory.first(arrowMaterial.getItemType()));
+				}
+			} else {
+				player.sendMessage("You do not have any " + arrowMaterialName);
+				return false;
+			}
+		}
+
+		if (!player.hasPermission("multiarrow.infinite")) {
+			if (inventory.contains(Material.ARROW)) {
+				ItemStack arrowStack = inventory.getItem(inventory.first(Material.ARROW));
+				if (arrowStack.getAmount() > 1) {
+					arrowStack.setAmount(arrowStack.getAmount() - 1);
+				} else {
+					inventory.remove(arrowStack);
+				}
+			} else {
+				player.sendMessage("Out of arrows!");
+				return false;
+			}
+		}
+
+		//HACK: Without this the arrow count does not update correctly
+		player.updateInventory();
+		return true;
+	}
+
+	private Boolean updateArrowIndex(Player player) {
+		final String playerName = player.getName();
+		final Boolean playerSneaking = player.isSneaking();
+
+		if (plugin.activeArrow.containsKey(playerName)) {
+			final Integer originalIndex = plugin.activeArrow.get(playerName);
+
+			if (player.hasPermission("multiarrow.use.all")) {
+				plugin.activeArrow.put(playerName, nextIndex(originalIndex, playerSneaking));
+				return true;
+			}
+
+			Integer currentIndex = nextIndex(originalIndex, playerSneaking);
+			while (currentIndex != originalIndex) {
+				String arrowName = plugin.arrowTypes.getName(currentIndex);
+				String permissionNode = "multiarrow.use." + arrowName.toLowerCase();
+				if (player.hasPermission(permissionNode)) {
+					plugin.activeArrow.put(playerName, currentIndex);
+					return true;
+				}
+				currentIndex = nextIndex(currentIndex, playerSneaking);
+			}
+
+			return false;
 		} else {
-			if (currentIndex == ArrowType.values().length - 1) {
-				currentIndex = 0;
-			} else {
-				currentIndex++;
-			}
+			plugin.activeArrow.put(playerName, -1);
 		}
-		return currentIndex;
+
+		return true;
 	}
+	
+	private Integer nextIndex(Integer index, Boolean increment) {
+		if ((!increment && index == -1) || (increment && index == plugin.arrowTypes.getMaxIndex())) {
+			return (index == -1) ? plugin.arrowTypes.getMaxIndex() : -1;
+		} else {
+			return index + ((increment) ? 1 : -1);
+		}
+	}
+	
+	//private final Logger logger = Logger.getLogger("Minecraft");
 }
